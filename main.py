@@ -1,4 +1,5 @@
 import sys
+import os
 from termcolor import colored
 import mysql.connector
 from tradingview_ta import TA_Handler, Interval, Exchange
@@ -10,14 +11,18 @@ from libs.BitKub import BitKub
 # initialize environ
 bitkub = BitKub()
 
-mydb = mysql.connector.connect(host="localhost",user="root",password="",database="trend_db")
+mydb = mysql.connector.connect(host=os.getenv('MYSQL_HOST'),
+                               user=os.getenv('MYSQL_USER'),
+                               password=os.getenv('MYSQL_PASSWORD'),
+                               database=os.getenv('MYSQL_DBNAME'))
+
 
 def insert_db(symbol, price, percent, is_trend, avg_score):
     mycursor = mydb.cursor()
     sql = f"select id from tbt_subscribe where symbol='{symbol}'"
     mycursor.execute(sql)
     myresult = mycursor.fetchone()
-    
+
     sql = f"""INSERT INTO tbt_subscribe (id,symbol,on_price,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES (uuid(),'{symbol}', '{price}','{price}', '{percent}', {is_trend}, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
     if myresult != None:
         sql = f"""update tbt_subscribe set 
@@ -28,10 +33,11 @@ def insert_db(symbol, price, percent, is_trend, avg_score):
         avg_score={avg_score},
         last_update=current_timestamp
         where id='{myresult[0]}'"""
-        
+
     mycursor.execute(sql)
     mydb.commit()
     print(mydb)
+
 
 def loop_for_trend(s, is_subscripe=False):
     score = 0
@@ -74,19 +80,21 @@ def loop_for_trend(s, is_subscripe=False):
         interesting = "Buy"
         txt_color = "green"
         total_avg = 1
-        
+
     print(
         f"{s} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {last_price[0]:,}THB percent: {last_price[1]}% avg: {total_avg}"
     )
-    
+
     is_trend = 0
     if interesting == 'Buy':
         is_trend = 1
-        
+
     if interesting == "Buy" or is_subscripe is True:
-        insert_db(s, last_price[0], last_price[1], is_trend, score-total_timeframe)
-        
+        insert_db(s, last_price[0], last_price[1], is_trend,
+                  score - total_timeframe)
+
     print("******************************")
+
 
 def main():
     server_time = bitkub.timestamps()
@@ -98,7 +106,8 @@ def main():
     for s in symbols:
         # loop timeframe
         loop_for_trend(s=s)
-        
+
+
 def subscribe():
     mycursor = mydb.cursor()
     sql = f"select symbol  from tbt_subscribe where is_activate=1 order by symbol "
