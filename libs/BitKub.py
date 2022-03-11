@@ -67,7 +67,8 @@ class BitKub:
         }
 
     def ticket(self, product='BTC'):
-        ticker = requests.get(self.API_HOST + '/api/market/ticker')
+        ticker = requests.get(self.API_HOST + '/api/market/ticker?sym=' +
+                              f'THB_{product}')
         ticker = ticker.json()
         return ticker[f'THB__{product}']
 
@@ -90,7 +91,8 @@ class BitKub:
         return doc
 
     def price(self, product='BTC'):
-        ticker = requests.get(self.API_HOST + '/api/market/ticker')
+        ticker = requests.get(self.API_HOST + '/api/market/ticker?sym=' +
+                              f'THB_{product}')
         ticker = ticker.json()
         try:
             return [
