@@ -19,16 +19,16 @@ class BitKub:
         }
 
         # initialize timeframe
-        # self.INTERVAL_1_MINUTE = "1m"
-        # self.INTERVAL_5_MINUTES = "5m"
+        self.INTERVAL_1_MINUTE = "1m"
+        self.INTERVAL_5_MINUTES = "5m"
         self.INTERVAL_15_MINUTES = "15m"
         self.INTERVAL_30_MINUTES = "30m"
         self.INTERVAL_1_HOUR = "1h"
         self.INTERVAL_2_HOURS = "2h"
         self.INTERVAL_4_HOURS = "4h"
         self.INTERVAL_1_DAY = "1d"
-        # self.INTERVAL_1_WEEK = "1W"
-        # self.INTERVAL_1_MONTH = "1M"
+        self.INTERVAL_1_WEEK = "1W"
+        self.INTERVAL_1_MONTH = "1M"
 
     def timeframe(self):
         return [
