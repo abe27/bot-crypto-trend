@@ -43,7 +43,6 @@ class BitKub:
             # self.INTERVAL_1_WEEK,
             # self.INTERVAL_1_MONTH,
         ]
-        
 
     def json_encode(data):
         return json.dumps(data, separators=(',', ':'), sort_keys=True)
@@ -66,7 +65,7 @@ class BitKub:
             'timestamp': response.text,
             'datetime': datetime.fromtimestamp(int(response.text))
         }
-        
+
     def ticket(self, product='BTC'):
         ticker = requests.get(self.API_HOST + '/api/market/ticker')
         ticker = ticker.json()
@@ -89,9 +88,17 @@ class BitKub:
 
         doc.sort()
         return doc
-    
+
     def price(self, product='BTC'):
         ticker = requests.get(self.API_HOST + '/api/market/ticker')
         ticker = ticker.json()
-        price = float(ticker[f'THB__{product}']['last'])
-        return price
+        try:
+            return [
+                float(ticker[f'THB_{product}']['last']),
+                float(ticker[f'THB_{product}']['percentChange'])
+            ]
+
+        except:
+            pass
+
+        return [0, 0]
