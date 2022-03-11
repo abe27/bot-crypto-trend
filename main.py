@@ -109,6 +109,6 @@ def subscribe():
 
 
 if __name__ == '__main__':
-    # main()
+    main()
     subscribe()
     sys.exit(0)
