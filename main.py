@@ -87,7 +87,7 @@ def main():
 
         total_timeframe = len(bitkub.timeframe())
         total_avg = 0
-        if (score - total_timeframe) >= -3:
+        if (score - total_timeframe) > -2:
             interesting = "Buy"
             txt_color = "green"
             total_avg = 1
