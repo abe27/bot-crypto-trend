@@ -11,7 +11,7 @@ from libs.BitKub import BitKub
 bitkub = BitKub()
 
 
-def insert_db(symbol, price, percent, is_trend):
+def insert_db(symbol, price, percent, is_trend, avg_score):
     mydb = mysql.connector.connect(host="localhost",
                                    user="root",
                                    password="",
@@ -20,15 +20,15 @@ def insert_db(symbol, price, percent, is_trend):
     sql = f"select id from tbt_subscribe where symbol='{symbol}'"
     mycursor.execute(sql)
     myresult = mycursor.fetchone()
-    print(myresult[0])
     
-    sql = f"""INSERT INTO tbt_subscribe (id,symbol,on_price,last_price,percent_change,is_activate, is_trend,created_on,last_update) VALUES (uuid(),'{symbol}', '{price}','{price}', '{percent}', {is_trend}, {is_trend},current_timestamp, current_timestamp)"""
-    if len(myresult) > 0:
+    sql = f"""INSERT INTO tbt_subscribe (id,symbol,on_price,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES (uuid(),'{symbol}', '{price}','{price}', '{percent}', {is_trend}, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
+    if myresult != None:
         sql = f"""update tbt_subscribe set 
         last_price='{price}',
         percent_change='{percent}',
         is_activate={is_trend},
         is_trend={is_trend},
+        avg_score={avg_score},
         last_update=current_timestamp
         where id='{myresult[0]}'"""
         
@@ -101,7 +101,7 @@ def main():
             is_trend = 1
 
         if interesting == "Buy":
-            insert_db(s, last_price[0], last_price[1], is_trend)
+            insert_db(s, last_price[0], last_price[1], is_trend, score-total_timeframe)
 
         print("******************************")
 
