@@ -126,7 +126,7 @@ class BitKub:
                 recomm = summary['RECOMMENDATION']
                 x = 0
                 if str(recomm).find('BUY') >= 0: x = 1
-                if recomm == "NEUTRAL": x = 1
+                # if recomm == "NEUTRAL": x = 1
                 txt_color = "green"
                 if x == 0: txt_color = "red"
                 print(f"{symbol} is {colored(recomm, txt_color)} on {t} score: {x}")
