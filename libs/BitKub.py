@@ -152,9 +152,14 @@ class BitKub:
         print(
             f"{symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(total_avg, txt_color)}"
         )
-
+        
+        trend = False
+        if last_price[1] <= 1:
+            trend = True
+            
         return {
-            "interesting": interesting,
+            "interesting": trend,
+            'trend': interesting,
             "symbol": symbol,
             "price": last_price[0],
             "percent": last_price[1],

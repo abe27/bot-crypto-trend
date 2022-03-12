@@ -21,7 +21,7 @@ def main():
     for s in symbols:
         print(colored(f"start new order loop {s}", "green"))
         x = bitkub.check_trend(symbol=s)
-        if x['interesting'] == 'Buy':
+        if x['interesting']:
             mydb.insert(symbol=x['symbol'],
                         price=x['price'],
                         percent=x['percent'],
