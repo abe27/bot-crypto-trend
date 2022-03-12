@@ -13,41 +13,9 @@ from libs.Service import MysqlService
 bitkub = BitKub()
 mydb = MysqlService()
 
-# mydb = mysql.connector.connect(host=os.getenv('MYSQL_HOST'),
-#                                user=os.getenv('MYSQL_USER'),
-#                                password=os.getenv('MYSQL_PASSWORD'),
-#                                database=os.getenv('MYSQL_DBNAME'))
-
-# def insert_db(symbol, price, percent, is_trend, avg_score):
-#     etd = datetime.now().strftime('%Y-%m-%d')
-#     mycursor = mydb.cursor()
-#     sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and is_activate=1"
-#     mycursor.execute(sql)
-#     myresult = mycursor.fetchone()
-
-#     sql = f"""INSERT INTO tbt_subscribe (id,etd,symbol,on_price,on_percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES (uuid(),current_timestamp,'{symbol}', '{price}','{percent}','{price}', '{percent}', {is_trend}, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
-#     if myresult != None:
-#         is_stats = 0
-#         if price > float(myresult[1]):
-#             is_stats = 1
-
-#         sql = f"""update tbt_subscribe set
-#         last_price='{price}',
-#         percent_change='{percent}',
-#         is_activate={is_stats},
-#         is_trend={is_stats},
-#         avg_score={avg_score},
-#         last_update=current_timestamp
-#         where id='{myresult[0]}'"""
-
-#     mycursor.execute(sql)
-#     mydb.commit()
-#     print(mydb)
-
 
 def loop_for_trend(s):
     score = 0
-    print(colored(f"start loop {s}", "blue"))
     for t in bitkub.timeframe():
         ta = TA_Handler(symbol=f"{s}THB",
                         screener="crypto",
@@ -91,22 +59,40 @@ def loop_for_trend(s):
         f"{s} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {last_price[0]:,}THB percent: {last_price[1]}% avg: {total_avg}"
     )
 
-    mydb.update_db(symbol=s,
-                   price=last_price[0],
-                   percent=last_price[1],
-                   avg_score=(score - total_timeframe))
-
-    print("******************************")
+    return {
+        "symbol": s,
+        "price": last_price[0],
+        "percent": last_price[1],
+        "avg_score": (score - total_timeframe)
+    }
 
 
 def main():
+    server_time = bitkub.timestamps()
+    print(
+        colored(f"start run datetime on server: {server_time['datetime']}",
+                "red"))
+    # update subscribe
     mycursor = mydb.MYSQL_DB.cursor()
     sql = f"select symbol  from tbt_subscribe where is_activate=1 order by symbol "
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
     for i in myresult:
-        loop_for_trend(s=i[0])
+        print(colored(f"start subscribe loop {i[0]}", "blue"))
+        x = loop_for_trend(s=i[0])
+        mydb.update(symbol=x['symbol'], price=x['price'], percent=x['percent'])
 
+    # get net trend
+    symbols = bitkub.symbols()
+    for s in symbols:
+        print(colored(f"start subscribe loop {i[0]}", "green"))
+        x = loop_for_trend(s=s)
+        mydb.insert(symbol=x['symbol'], price=x['price'], percent=x['percent'], is_trend=1, avg_score=x['avg_score'])
+        
+    server_time = bitkub.timestamps()
+    print(
+        colored(f"end run datetime on server: {server_time['datetime']}","red"))
+    print("******************************")
 
 if __name__ == '__main__':
     main()

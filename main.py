@@ -101,10 +101,7 @@ def loop_for_trend(s):
 
 
 def main():
-    server_time = bitkub.timestamps()
-    print(
-        colored(f"start run datetime on server: {server_time['datetime']}",
-                "red"))
+    
 
     symbols = bitkub.symbols()
     for s in symbols:
