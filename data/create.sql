@@ -13,6 +13,5 @@ CREATE TABLE `tbt_subscribe` (
   `is_activate` tinyint(1) DEFAULT 1,
   `created_on` datetime DEFAULT current_timestamp(),
   `last_update` datetime DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `tbt_subscribe_un` (`symbol`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

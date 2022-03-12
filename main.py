@@ -21,7 +21,7 @@ mydb = mysql.connector.connect(host=os.getenv('MYSQL_HOST'),
 def insert_db(symbol, price, percent, is_trend, avg_score):
     etd = datetime.now().strftime('%Y-%m-%d')
     mycursor = mydb.cursor()
-    sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and etd='{etd}' and is_activate=1"
+    sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and is_activate=1"
     mycursor.execute(sql)
     myresult = mycursor.fetchone()
 
@@ -115,9 +115,8 @@ def main():
 
 
 def subscribe():
-    etd = datetime.now().strftime("%Y-%m-%d")
     mycursor = mydb.cursor()
-    sql = f"select symbol  from tbt_subscribe where is_activate=1 and etd='{etd}' order by symbol "
+    sql = f"select symbol  from tbt_subscribe where is_activate=1 order by symbol "
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
     for i in myresult:
