@@ -1,6 +1,7 @@
 import sys
 import os
 from termcolor import colored
+from datetime import datetime
 import mysql.connector
 from tradingview_ta import TA_Handler, Interval, Exchange
 from dotenv import load_dotenv
@@ -18,12 +19,13 @@ mydb = mysql.connector.connect(host=os.getenv('MYSQL_HOST'),
 
 
 def insert_db(symbol, price, percent, is_trend, avg_score):
+    etd = datetime.now().strftime('%Y-%m-%d')
     mycursor = mydb.cursor()
-    sql = f"select id from tbt_subscribe where symbol='{symbol}'"
+    sql = f"select id from tbt_subscribe where symbol='{symbol}' and etd='{etd}'"
     mycursor.execute(sql)
     myresult = mycursor.fetchone()
 
-    sql = f"""INSERT INTO tbt_subscribe (id,on_date,symbol,on_price,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES (uuid(),current_timestamp,'{symbol}', '{price}','{price}', '{percent}', {is_trend}, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
+    sql = f"""INSERT INTO tbt_subscribe (id,etd,symbol,on_price,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES (uuid(),current_timestamp,'{symbol}', '{price}','{price}', '{percent}', {is_trend}, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
     if myresult != None:
         sql = f"""update tbt_subscribe set 
         last_price='{price}',
@@ -76,7 +78,7 @@ def loop_for_trend(s, is_subscripe=False):
         txt_color = "magenta"
     total_timeframe = len(bitkub.timeframe())
     total_avg = 0
-    if (score - total_timeframe) >= -1:
+    if (score - total_timeframe) >= 0:
         interesting = "Buy"
         txt_color = "green"
         total_avg = 1
