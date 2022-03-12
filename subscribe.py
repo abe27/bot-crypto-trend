@@ -38,7 +38,7 @@ def loop_for_trend(s):
             if x == 0: txt_color = "red"
             print(f"{s} is {colored(recomm, txt_color)} on {t} score: {x}")
             score += x
-    print(colored(f"end loop {s}", "blue"))
+            
     interesting = "Sell"
     txt_color = "red"
     if score >= len(bitkub.timeframe()):
