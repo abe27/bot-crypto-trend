@@ -4,6 +4,8 @@ import json
 import hmac
 import hashlib
 from datetime import datetime
+from termcolor import colored
+from tradingview_ta import TA_Handler, Interval, Exchange
 
 
 class BitKub:
@@ -104,3 +106,57 @@ class BitKub:
             pass
 
         return [0, 0]
+    
+    def check_trend(self, symbol):
+        score = 0
+        for t in self.timeframe():
+            ta = TA_Handler(symbol=f"{symbol}THB",
+                            screener="crypto",
+                            exchange="Bitkub",
+                            interval=t)
+            summary = []
+            try:
+                summary = ta.get_analysis().summary
+                summary['SYMBOL'] = symbol
+                summary['QOUTE'] = "THB"
+                summary['ON_TIME'] = t
+            except:
+                pass
+            if len(summary) > 0:
+                recomm = summary['RECOMMENDATION']
+                x = 0
+                if str(recomm).find('BUY') >= 0: x = 1
+                if recomm == "NEUTRAL": x = 1
+                txt_color = "green"
+                if x == 0: txt_color = "red"
+                print(f"{symbol} is {colored(recomm, txt_color)} on {t} score: {x}")
+                score += x
+
+        interesting = "Sell"
+        txt_color = "red"
+        if score >= len(self.timeframe()):
+            interesting = "Buy"
+            txt_color = "green"
+        last_price = self.price(product=symbol)
+        if last_price[0] == 0:
+            interesting = "-"
+            txt_color = "magenta"
+        total_timeframe = len(self.timeframe())
+        total_avg = 0
+        if (score - total_timeframe) >= 0:
+            interesting = "Buy"
+            txt_color = "green"
+            total_avg = 1
+
+        price = f"{last_price[0]:,}"
+        print(
+            f"{symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(total_avg, txt_color)}"
+        )
+
+        return {
+            "interesting": interesting,
+            "symbol": symbol,
+            "price": last_price[0],
+            "percent": last_price[1],
+            "avg_score": (score - total_timeframe)
+        }
