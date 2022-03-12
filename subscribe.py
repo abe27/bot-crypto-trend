@@ -18,7 +18,6 @@ mydb = MysqlService()
 #                                password=os.getenv('MYSQL_PASSWORD'),
 #                                database=os.getenv('MYSQL_DBNAME'))
 
-
 # def insert_db(symbol, price, percent, is_trend, avg_score):
 #     etd = datetime.now().strftime('%Y-%m-%d')
 #     mycursor = mydb.cursor()
@@ -31,8 +30,8 @@ mydb = MysqlService()
 #         is_stats = 0
 #         if price > float(myresult[1]):
 #             is_stats = 1
-            
-#         sql = f"""update tbt_subscribe set 
+
+#         sql = f"""update tbt_subscribe set
 #         last_price='{price}',
 #         percent_change='{percent}',
 #         is_activate={is_stats},
@@ -92,12 +91,10 @@ def loop_for_trend(s):
         f"{s} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {last_price[0]:,}THB percent: {last_price[1]}% avg: {total_avg}"
     )
 
-    is_trend = 0
-    if interesting == 'Buy':
-        is_trend = 1
-
-    mydb.insert_db(s, last_price[0], last_price[1], is_trend,
-                  score - total_timeframe)
+    mydb.update_db(symbol=s,
+                   price=last_price[0],
+                   percent=last_price[1],
+                   avg_score=(score - total_timeframe))
 
     print("******************************")
 

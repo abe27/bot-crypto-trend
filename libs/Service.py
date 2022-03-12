@@ -9,7 +9,7 @@ class MysqlService:
                                password=os.getenv('MYSQL_PASSWORD'),
                                database=os.getenv('MYSQL_DBNAME'))
         
-    def insert_db(self, symbol, price, percent, is_trend, avg_score):
+    def insert_db(self, symbol='None', price=0, percent=0, is_trend=1, avg_score=0):
         etd = datetime.now().strftime('%Y-%m-%d')
         mycursor = self.MYSQL_DB.cursor()
         sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and is_activate=1"
@@ -22,7 +22,7 @@ class MysqlService:
             self.MYSQL_DB.commit()
         print(self.MYSQL_DB)
         
-    def update_db(self, symbol, price, percent, avg_score):
+    def update_db(self, symbol='None', price=0, percent=0, avg_score=0):
         mycursor = self.MYSQL_DB.cursor()
         sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and is_activate=1"
         mycursor.execute(sql)
