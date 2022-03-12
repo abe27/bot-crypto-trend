@@ -86,7 +86,7 @@ def main():
     # get net trend
     symbols = bitkub.symbols()
     for s in symbols:
-        print(colored(f"start subscribe loop {s}", "green"))
+        print(colored(f"start new order loop {s}", "green"))
         x = loop_for_trend(s=s)
         if x['interesting'] == 'Buy':
             mydb.insert(symbol=x['symbol'], price=x['price'], percent=x['percent'], is_trend=1, avg_score=x['avg_score'])
