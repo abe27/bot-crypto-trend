@@ -60,6 +60,7 @@ def loop_for_trend(s):
     )
 
     return {
+        "interesting": interesting,
         "symbol": s,
         "price": last_price[0],
         "percent": last_price[1],
@@ -87,7 +88,8 @@ def main():
     for s in symbols:
         print(colored(f"start subscribe loop {i[0]}", "green"))
         x = loop_for_trend(s=s)
-        mydb.insert(symbol=x['symbol'], price=x['price'], percent=x['percent'], is_trend=1, avg_score=x['avg_score'])
+        if x['interesting'] == 'Buy':
+            mydb.insert(symbol=x['symbol'], price=x['price'], percent=x['percent'], is_trend=1, avg_score=x['avg_score'])
         
     server_time = bitkub.timestamps()
     print(
