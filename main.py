@@ -25,7 +25,7 @@ def insert_db(symbol, price, percent, is_trend, avg_score):
     mycursor.execute(sql)
     myresult = mycursor.fetchone()
 
-    sql = f"""INSERT INTO tbt_subscribe (id,etd,symbol,on_price,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES (uuid(),current_timestamp,'{symbol}', '{price}','{price}', '{percent}', {is_trend}, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
+    sql = f"""INSERT INTO tbt_subscribe (id,etd,symbol,on_price,on_percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES (uuid(),current_timestamp,'{symbol}', '{price}','{percent}','{price}', '{percent}', {is_trend}, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
     if myresult != None:
         sql = f"""update tbt_subscribe set 
         last_price='{price}',
