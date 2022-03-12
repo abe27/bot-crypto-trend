@@ -34,7 +34,7 @@ class BitKub:
         return [
             # self.INTERVAL_1_MINUTE,
             # self.INTERVAL_5_MINUTES,
-            self.INTERVAL_15_MINUTES,
+            # self.INTERVAL_15_MINUTES,
             self.INTERVAL_30_MINUTES,
             self.INTERVAL_1_HOUR,
             self.INTERVAL_2_HOURS,
