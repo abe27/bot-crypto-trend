@@ -38,7 +38,7 @@ def loop_for_trend(s):
             if x == 0: txt_color = "red"
             print(f"{s} is {colored(recomm, txt_color)} on {t} score: {x}")
             score += x
-            
+
     interesting = "Sell"
     txt_color = "red"
     if score >= len(bitkub.timeframe()):
@@ -55,8 +55,9 @@ def loop_for_trend(s):
         txt_color = "green"
         total_avg = 1
 
+    price = f"{last_price[0]:,}"
     print(
-        f"{s} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {last_price[0]:,}THB percent: {last_price[1]}% avg: {total_avg}"
+        f"{s} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(total_avg, txt_color)}"
     )
 
     return {
@@ -89,12 +90,18 @@ def main():
         print(colored(f"start new order loop {s}", "green"))
         x = loop_for_trend(s=s)
         if x['interesting'] == 'Buy':
-            mydb.insert(symbol=x['symbol'], price=x['price'], percent=x['percent'], is_trend=1, avg_score=x['avg_score'])
-        
+            mydb.insert(symbol=x['symbol'],
+                        price=x['price'],
+                        percent=x['percent'],
+                        is_trend=1,
+                        avg_score=x['avg_score'])
+
     server_time = bitkub.timestamps()
     print(
-        colored(f"end run datetime on server: {server_time['datetime']}","red"))
+        colored(f"end run datetime on server: {server_time['datetime']}",
+                "red"))
     print("******************************")
+
 
 if __name__ == '__main__':
     main()
