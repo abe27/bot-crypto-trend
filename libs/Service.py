@@ -30,7 +30,7 @@ class MysqlService:
         myresult = mycursor.fetchone()
         if myresult != None:
             is_stats = 0
-            if price > float(myresult[1]):
+            if price >= float(myresult[1]):
                 is_stats = 1
                 
             sql = f"""update tbt_subscribe set 
