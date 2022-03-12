@@ -46,7 +46,7 @@ mydb = MysqlService()
 #     print(mydb)
 
 
-def loop_for_trend(s, is_subscripe=False):
+def loop_for_trend(s):
     score = 0
     print(colored(f"start loop {s}", "blue"))
     for t in bitkub.timeframe():
@@ -96,35 +96,21 @@ def loop_for_trend(s, is_subscripe=False):
     if interesting == 'Buy':
         is_trend = 1
 
-    if interesting == "Buy" or is_subscripe is True:
-        mydb.insert_db(s, last_price[0], last_price[1], is_trend,
+    mydb.insert_db(s, last_price[0], last_price[1], is_trend,
                   score - total_timeframe)
 
     print("******************************")
 
 
 def main():
-    server_time = bitkub.timestamps()
-    print(
-        colored(f"start run datetime on server: {server_time['datetime']}",
-                "red"))
-
-    symbols = bitkub.symbols()
-    for s in symbols:
-        # loop timeframe
-        loop_for_trend(s=s)
-
-
-def subscribe():
     mycursor = mydb.MYSQL_DB.cursor()
     sql = f"select symbol  from tbt_subscribe where is_activate=1 order by symbol "
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
     for i in myresult:
-        loop_for_trend(s=i[0], is_subscripe=True)
+        loop_for_trend(s=i[0])
 
 
 if __name__ == '__main__':
-    # main()
-    subscribe()
+    main()
     sys.exit(0)

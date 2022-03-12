@@ -17,6 +17,16 @@ class MysqlService:
         myresult = mycursor.fetchone()
 
         sql = f"""INSERT INTO tbt_subscribe (id,etd,symbol,on_price,on_percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES (uuid(),current_timestamp,'{symbol}', '{price}','{percent}','{price}', '{percent}', {is_trend}, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
+        if myresult is None:
+            mycursor.execute(sql)
+            self.MYSQL_DB.commit()
+        print(self.MYSQL_DB)
+        
+    def update_db(self, symbol, price, percent, avg_score):
+        mycursor = self.MYSQL_DB.cursor()
+        sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and is_activate=1"
+        mycursor.execute(sql)
+        myresult = mycursor.fetchone()
         if myresult != None:
             is_stats = 0
             if price > float(myresult[1]):
@@ -30,7 +40,6 @@ class MysqlService:
             avg_score={avg_score},
             last_update=current_timestamp
             where id='{myresult[0]}'"""
-
-        mycursor.execute(sql)
-        self.MYSQL_DB.commit()
+            mycursor.execute(sql)
+            self.MYSQL_DB.commit()
         print(self.MYSQL_DB)
