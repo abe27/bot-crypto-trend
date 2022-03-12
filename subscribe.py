@@ -116,7 +116,7 @@ def main():
 
 
 def subscribe():
-    mycursor = mydb.cursor()
+    mycursor = mydb.MYSQL_DB.cursor()
     sql = f"select symbol  from tbt_subscribe where is_activate=1 order by symbol "
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
@@ -125,6 +125,6 @@ def subscribe():
 
 
 if __name__ == '__main__':
-    main()
-    # subscribe()
+    # main()
+    subscribe()
     sys.exit(0)
