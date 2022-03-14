@@ -59,6 +59,6 @@ class MysqlService:
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
             print(f'{txt} {symbol}:=> {myresult[0]}')
-            Logging(symbol=symbol, msg=f'SUBSCIBE {txt} :=> {myresult[0]}')
+            Logging(symbol=symbol, msg=f'SUBSCIBE {txt} :=> {myresult[0]} PROFIT: {(price-myresult[1])}')
         return True
         

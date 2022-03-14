@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from libs.BitKub import BitKub
 from libs.Service import MysqlService
+from libs.Logging import Logging
 
 # initialize environ
 bitkub = BitKub()
@@ -13,6 +14,7 @@ mydb = MysqlService()
 
 def main():
     server_time = bitkub.timestamps()
+    Logging(symbol='SUBSCRIBE', msg=f"RUN AT: {server_time['timestamp']}")
     print(
         colored(f"start run datetime on server: {server_time['datetime']}",
                 "red"))
@@ -35,6 +37,7 @@ def main():
         colored(f"end run datetime on server: {server_time['datetime']}",
                 "red"))
     print("******************************")
+    Logging(symbol='SUBSCRIBE', msg=f"END AT: {server_time['timestamp']}")
 
 
 if __name__ == '__main__':

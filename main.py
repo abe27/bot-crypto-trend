@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from libs.BitKub import BitKub
 from libs.Service import MysqlService
+from libs.Logging import Logging
 
 # initialize environ
 bitkub = BitKub()
@@ -16,6 +17,7 @@ def main():
     print(
         colored(f"start run datetime on server: {server_time['datetime']}",
                 "red"))
+    Logging(symbol='SEARCH', msg=f"START AT: {server_time['timestamp']}")
     # get net trend
     symbols = bitkub.symbols()
     for s in symbols:
@@ -33,6 +35,7 @@ def main():
         colored(f"end run datetime on server: {server_time['datetime']}",
                 "red"))
     print("******************************")
+    Logging(symbol='SEARCH', msg=f"END AT: {server_time['timestamp']}")
 
 
 if __name__ == '__main__':
