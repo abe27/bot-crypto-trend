@@ -7,6 +7,13 @@ from datetime import datetime
 from termcolor import colored
 from tradingview_ta import TA_Handler, Interval, Exchange
 
+@staticmethod
+def get_recomment(obj):
+    recomm = "-"
+    if obj != None:
+        recomm = obj['RECOMMENDATION']
+        
+    return recomm
 
 class BitKub:
     def __init__(self):
@@ -107,6 +114,8 @@ class BitKub:
 
         return [0, 0]
     
+    
+    
     def check_trend(self, symbol):
         score = 0
         for t in self.timeframe():
@@ -117,19 +126,28 @@ class BitKub:
             summary = []
             try:
                 summary = ta.get_analysis().summary
+                summ = get_recomment(summary)
+                summary = ta.get_analysis().moving_averages
+                mv_avg = get_recomment(summary)
+                summary = ta.get_analysis().oscillators
+                oscillator = get_recomment(summary)
                 summary['SYMBOL'] = symbol
                 summary['QOUTE'] = "THB"
                 summary['ON_TIME'] = t
             except:
                 pass
+            
             if len(summary) > 0:
-                recomm = summary['RECOMMENDATION']
                 x = 0
-                if str(recomm).find('BUY') >= 0: x = 1
+                xx = 0
+                if str(summ).find('BUY') >= 0: xx += 1
+                if str(mv_avg).find('BUY') >= 0: xx += 1
+                if str(oscillator).find('BUY') >= 0: xx += 1
                 # if recomm == "NEUTRAL": x = 1
+                if xx == 3:x = 1
                 txt_color = "green"
                 if x == 0: txt_color = "red"
-                print(f"{symbol} is {colored(recomm, txt_color)} on {t} score: {x}")
+                print(f"{symbol} SUM: {colored(summ, txt_color)} MA: {colored(mv_avg, txt_color)} OSCI: {colored(oscillator, txt_color)} ON:{t} SCORE: {x}")
                 score += x
 
         interesting = "Sell"
