@@ -108,10 +108,10 @@ class BitKub:
                 float(ticker[f'THB_{symbol}']['last']),
                 float(ticker[f'THB_{symbol}']['percentChange'])
             ]
-
-        except Exception as e:
-            Logging(symbol='ERROR', msg=f'{symbol} ERR:{e}')
-            pass
+        except:pass
+        # except Exception as e:
+        #     Logging(symbol='ERROR', msg=f'{symbol} ERR:{e}')
+        #     pass
 
         return [0, 0]
     
@@ -126,9 +126,10 @@ class BitKub:
             mv_avg = get_recomment(summary)
             if str(mv_avg).find('BUY') >= 0:
                 x = True
-        except Exception as e:
-            Logging(symbol='ERROR', msg=f'{symbol} ERR:{e}')
-            pass
+        except:pass
+        # except Exception as e:
+        #     Logging(symbol='ERROR', msg=f'{symbol} ERR:{e}')
+        #     pass
         
         last_price = self.price(symbol=symbol)
         
@@ -167,13 +168,15 @@ class BitKub:
                 summary['SYMBOL'] = symbol
                 summary['QOUTE'] = "THB"
                 summary['ON_TIME'] = t
-            except Exception as e:
-                Logging(symbol='ERROR', msg=f'{symbol} {momemtum}:{e}')
-                pass
+                
+            except:pass
+            # except Exception as e:
+            #     Logging(symbol='ERROR', msg=f'{symbol} {momemtum}:{e}')
+            #     pass
             
             if len(summary) > 0:
                 x = 0
-                if str(summ).find('STRONG_SELL') >= 0: x = 1
+                if str(summ).find('SELL') >= 0: x = 1
                 
                 txt_color = "green"
                 if x == 0: txt_color = "red"
