@@ -130,7 +130,7 @@ class BitKub:
             Logging(symbol='ERROR', msg=f'{symbol} ERR:{e}')
             pass
         
-        last_price = self.price(product=symbol)
+        last_price = self.price(symbol=symbol)
         
         return {
             'close': x,
