@@ -14,7 +14,7 @@ mydb = MysqlService()
 
 def main():
     server_time = bitkub.timestamps()
-    Logging(symbol='ORDER', msg=f"RUN AT: {server_time['timestamp']}")
+    # Logging(symbol='ORDER', msg=f"RUN AT: {server_time['timestamp']}")
     print(
         colored(f"start run datetime on server: {server_time['datetime']}",
                 "red"))
@@ -24,7 +24,7 @@ def main():
         colored(f"end run datetime on server: {server_time['datetime']}",
                 "red"))
     print("******************************")
-    Logging(symbol='ORDER', msg=f"END AT: {server_time['timestamp']}")
+    # Logging(symbol='ORDER', msg=f"END AT: {server_time['timestamp']}")
     
 def subscribe():
     server_time = bitkub.timestamps()

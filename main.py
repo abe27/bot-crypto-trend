@@ -22,13 +22,16 @@ def main():
     symbols = bitkub.symbols()
     for s in symbols:
         print(colored(f"start new order loop {s}", "green"))
-        x = bitkub.check_trend(symbol=s)
-        if x['trend'] == 'Buy' and x['interesting'] is True:
-            mydb.insert(symbol=x['symbol'],
-                        price=x['price'],
-                        percent=x['percent'],
-                        is_trend=0,
-                        avg_score=x['avg_score'])
+        momemtum = ['SUM', 'MA', 'OSCI']
+        for m in momemtum:
+            x = bitkub.check_trend(symbol=s, momemtum=m)
+            if x['trend'] == 'Buy' and x['interesting'] is True:
+                mydb.insert(symbol=x['symbol'],
+                            price=x['price'],
+                            percent=x['percent'],
+                            is_trend=0,
+                            avg_score=x['avg_score'],
+                            momemtum=x['momemtum'])
 
     server_time = bitkub.timestamps()
     print(

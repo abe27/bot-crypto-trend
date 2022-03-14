@@ -140,7 +140,7 @@ class BitKub:
         }
     
     
-    def check_trend(self, symbol):
+    def check_trend(self, symbol, momemtum='SUM'):
         score = 0
         for t in self.timeframe():
             ta = TA_Handler(symbol=f"{symbol}THB",
@@ -148,16 +148,22 @@ class BitKub:
                             exchange="Bitkub",
                             interval=t)
             summ = '-'
-            mv_avg = '-'
-            oscillator = '-'
+            # mv_avg = '-'
+            # oscillator = '-'
             summary = []
             try:
-                # summary = ta.get_analysis().summary
-                # summ = get_recomment(summary)
-                summary = ta.get_analysis().moving_averages
-                mv_avg = get_recomment(summary)
-                # summary = ta.get_analysis().oscillators
-                # oscillator = get_recomment(summary)
+                if momemtum == 'SUM':
+                    summary = ta.get_analysis().summary
+                    summ = get_recomment(summary)
+                
+                elif momemtum == 'MA':
+                    summary = ta.get_analysis().moving_averages
+                    summ = get_recomment(summary)
+                
+                elif momemtum == 'OSCI':
+                    summary = ta.get_analysis().oscillators
+                    summ = get_recomment(summary)
+                    
                 summary['SYMBOL'] = symbol
                 summary['QOUTE'] = "THB"
                 summary['ON_TIME'] = t
@@ -167,17 +173,11 @@ class BitKub:
             
             if len(summary) > 0:
                 x = 0
-                # if str(summ).find('BUY') >= 0: xx += 1
-                # if str(mv_avg).find('BUY') >= 0: xx += 1
-                # if str(oscillator).find('BUY') >= 0: xx += 1
-                # #if recomm == "NEUTRAL": x = 1
-                # if str(summ).find('STRONG_SELL') or str(summ).find('NEUTRAL') >= 0: x = 1
-                if str(mv_avg) == 'STRONG_SELL' or str(mv_avg).find('NEUTRAL') >= 0: x = 1
-                # if str(oscillator).find('STRONG_SELL') or str(oscillator).find('NEUTRAL') >= 0: x = 1
+                if str(summ).find('STRONG_SELL') >= 0 or str(summ).find('NEUTRAL') >= 0: x = 1
                 
                 txt_color = "green"
                 if x == 0: txt_color = "red"
-                print(f"{symbol} SUM: {colored(summ, txt_color)} MA: {colored(mv_avg, txt_color)} OSCI: {colored(oscillator, txt_color)} ON:{t} SCORE: {x}")
+                print(f"{symbol} {momemtum}: {colored(summ, txt_color)} ON:{t} SCORE: {x}")
                 score += x
 
         interesting = "Sell"
@@ -211,5 +211,6 @@ class BitKub:
             "symbol": symbol,
             "price": last_price[0],
             "percent": last_price[1],
-            "avg_score": (score - total_timeframe)
+            "avg_score": (score - total_timeframe),
+            "momemtum": momemtum
         }
