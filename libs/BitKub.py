@@ -205,8 +205,8 @@ class BitKub:
         )
         
         trend = False
-        ### บันทึกข้อมูลเฉพาะราคาติดลบ 4%
-        if last_price[1] <= -4:
+        ### บันทึกข้อมูลเฉพาะราคาติดลบ 2%
+        if last_price[1] <= -2:
             trend = True
             
         return {
