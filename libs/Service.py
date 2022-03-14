@@ -26,7 +26,7 @@ class MysqlService:
                avg_score=0,
                momemtum='None'):
         mycursor = self.MYSQL_DB.cursor()
-        sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and is_activate=1"
+        sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and momemtum='{momemtum}' and is_activate=1"
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
         uid = str(uuid.uuid4())
