@@ -114,6 +114,27 @@ class BitKub:
 
         return [0, 0]
     
+    def check_subscibe(self, symbol='None'):
+        x = False
+        try:
+            ta = TA_Handler(symbol=f"{symbol}THB",
+                            screener="crypto",
+                            exchange="Bitkub",
+                            interval=self.INTERVAL_30_MINUTES)
+            summary = ta.get_analysis().moving_averages
+            mv_avg = get_recomment(summary)
+            if str(mv_avg).find('BUY') >= 0:
+                x = True
+        except:
+            pass
+        
+        last_price = self.price(product=symbol)
+        return {
+            'close': x,
+            "symbol": symbol,
+            "price": last_price[0],
+            "percent": last_price[1],
+        }
     
     
     def check_trend(self, symbol):
@@ -123,14 +144,17 @@ class BitKub:
                             screener="crypto",
                             exchange="Bitkub",
                             interval=t)
+            summ = '-'
+            mv_avg = '-'
+            oscillator = '-'
             summary = []
             try:
-                summary = ta.get_analysis().summary
-                summ = get_recomment(summary)
+                # summary = ta.get_analysis().summary
+                # summ = get_recomment(summary)
                 summary = ta.get_analysis().moving_averages
                 mv_avg = get_recomment(summary)
-                summary = ta.get_analysis().oscillators
-                oscillator = get_recomment(summary)
+                # summary = ta.get_analysis().oscillators
+                # oscillator = get_recomment(summary)
                 summary['SYMBOL'] = symbol
                 summary['QOUTE'] = "THB"
                 summary['ON_TIME'] = t
@@ -139,12 +163,14 @@ class BitKub:
             
             if len(summary) > 0:
                 x = 0
-                xx = 0
-                if str(summ).find('BUY') >= 0: xx += 1
-                if str(mv_avg).find('BUY') >= 0: xx += 1
-                if str(oscillator).find('BUY') >= 0: xx += 1
-                # if recomm == "NEUTRAL": x = 1
-                if xx == 3:x = 1
+                # if str(summ).find('BUY') >= 0: xx += 1
+                # if str(mv_avg).find('BUY') >= 0: xx += 1
+                # if str(oscillator).find('BUY') >= 0: xx += 1
+                # #if recomm == "NEUTRAL": x = 1
+                # if str(summ).find('STRONG_SELL') or str(summ).find('NEUTRAL') >= 0: x = 1
+                if str(mv_avg) == 'STRONG_SELL' or str(mv_avg).find('NEUTRAL') >= 0: x = 1
+                # if str(oscillator).find('STRONG_SELL') or str(oscillator).find('NEUTRAL') >= 0: x = 1
+                
                 txt_color = "green"
                 if x == 0: txt_color = "red"
                 print(f"{symbol} SUM: {colored(summ, txt_color)} MA: {colored(mv_avg, txt_color)} OSCI: {colored(oscillator, txt_color)} ON:{t} SCORE: {x}")
@@ -172,7 +198,7 @@ class BitKub:
         )
         
         trend = False
-        if last_price[1] <= 1:
+        if last_price[1] < 1:
             trend = True
             
         return {

@@ -1,4 +1,5 @@
 import os
+import uuid
 import mysql.connector
 
 class MysqlService:
@@ -15,7 +16,7 @@ class MysqlService:
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
 
-        sql = f"""INSERT INTO tbt_subscribe(id,etd,symbol,on_price,on_percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES (uuid(),current_timestamp,'{symbol}', '{price}','{percent}','{price}', '{percent}', {is_trend}, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
+        sql = f"""INSERT INTO tbt_subscribe(id,etd,symbol,on_price,on_percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES ('{str(uuid.uuid4())}',current_timestamp,'{symbol}', '{price}','{percent}','{price}', '{percent}', 1, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
         if myresult is None:
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
@@ -23,24 +24,32 @@ class MysqlService:
         print(f'insert db :=> {symbol}')
         return True
         
-    def update(self, symbol='None', price=0, percent=0, avg_score=0):
+    def update(self, symbol='None', price=0, percent=0, avg_score=0, up_price=False):
         mycursor = self.MYSQL_DB.cursor()
         sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and is_activate=1"
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
         if myresult != None:
-            is_stats = 0
-            if price >= float(myresult[1]):
-                is_stats = 1
-                
             sql = f"""update tbt_subscribe set 
-            last_price='{price}',
-            percent_change='{percent}',
-            is_activate={is_stats},
-            is_trend={is_stats},
-            avg_score={avg_score},
-            last_update=current_timestamp
-            where id='{myresult[0]}'"""
+                last_price='{price}',
+                percent_change='{percent}',
+                last_update=current_timestamp
+                where id='{myresult[0]}'"""
+                
+            if up_price:
+                is_stats = 0
+                if price >= float(myresult[1]):
+                    is_stats = 1
+                    
+                sql = f"""update tbt_subscribe set 
+                last_price='{price}',
+                percent_change='{percent}',
+                is_activate={is_stats},
+                is_trend={is_stats},
+                avg_score={avg_score},
+                last_update=current_timestamp
+                where id='{myresult[0]}'"""
+                
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
             

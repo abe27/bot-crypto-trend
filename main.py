@@ -25,7 +25,7 @@ def main():
             mydb.insert(symbol=x['symbol'],
                         price=x['price'],
                         percent=x['percent'],
-                        is_trend=1,
+                        is_trend=0,
                         avg_score=x['avg_score'])
 
     server_time = bitkub.timestamps()
