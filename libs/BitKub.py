@@ -99,18 +99,18 @@ class BitKub:
         doc.sort()
         return doc
 
-    def price(self, product='BTC'):
+    def price(self, symbol='BTC'):
         ticker = requests.get(self.API_HOST + '/api/market/ticker?sym=' +
-                              f'THB_{product}')
+                              f'THB_{symbol}')
         ticker = ticker.json()
         try:
             return [
-                float(ticker[f'THB_{product}']['last']),
-                float(ticker[f'THB_{product}']['percentChange'])
+                float(ticker[f'THB_{symbol}']['last']),
+                float(ticker[f'THB_{symbol}']['percentChange'])
             ]
 
         except Exception as e:
-            Logging(symbol=product, msg=e)
+            Logging(symbol='ERROR', msg=f'{symbol} ERR:{e}')
             pass
 
         return [0, 0]
@@ -127,7 +127,7 @@ class BitKub:
             if str(mv_avg).find('BUY') >= 0:
                 x = True
         except Exception as e:
-            Logging(symbol=symbol, msg=e)
+            Logging(symbol='ERROR', msg=f'{symbol} ERR:{e}')
             pass
         
         last_price = self.price(product=symbol)
@@ -168,7 +168,7 @@ class BitKub:
                 summary['QOUTE'] = "THB"
                 summary['ON_TIME'] = t
             except Exception as e:
-                Logging(symbol=symbol, msg=e)
+                Logging(symbol='ERROR', msg=f'{symbol} {momemtum}:{e}')
                 pass
             
             if len(summary) > 0:
