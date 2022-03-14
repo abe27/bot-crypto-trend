@@ -111,7 +111,7 @@ class BitKub:
             ]
 
         except Exception as e:
-            Logging(symbol=product, msg=e.message)
+            Logging(symbol=product, msg=e)
             pass
 
         return [0, 0]
@@ -128,7 +128,7 @@ class BitKub:
             if str(mv_avg).find('BUY') >= 0:
                 x = True
         except Exception as e:
-            Logging(symbol=symbol, msg=e.message)
+            Logging(symbol=symbol, msg=e)
             pass
         
         last_price = self.price(product=symbol)
@@ -163,7 +163,7 @@ class BitKub:
                 summary['QOUTE'] = "THB"
                 summary['ON_TIME'] = t
             except Exception as e:
-                Logging(symbol=symbol, msg=e.message)
+                Logging(symbol=symbol, msg=e)
                 pass
             
             if len(summary) > 0:
