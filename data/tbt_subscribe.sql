@@ -1,5 +1,3 @@
--- trend_db.tbt_subscribe definition
-
 CREATE TABLE `tbt_subscribe` (
   `id` char(36) NOT NULL DEFAULT uuid(),
   `etd` date NOT NULL,
