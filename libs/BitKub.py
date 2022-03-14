@@ -185,7 +185,7 @@ class BitKub:
         if score >= len(self.timeframe()):
             interesting = "Buy"
             txt_color = "green"
-        last_price = self.price(product=symbol)
+        last_price = self.price(symbol=symbol)
         if last_price[0] == 0:
             interesting = "-"
             txt_color = "magenta"
