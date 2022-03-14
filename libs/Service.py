@@ -18,27 +18,6 @@ class MysqlService:
         mycursor.execute(sql)
         self.MYSQL_DB.commit()
 
-    def insert(self,
-               symbol='None',
-               price=0,
-               percent=0,
-               is_trend=1,
-               avg_score=0,
-               momemtum='None'):
-        mycursor = self.MYSQL_DB.cursor()
-        sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and momemtum='{momemtum}' and is_activate=1"
-        mycursor.execute(sql)
-        myresult = mycursor.fetchone()
-        uid = str(uuid.uuid4())
-        sql = f"""INSERT INTO tbt_subscribe(id,momemtum,etd,symbol,on_price,on_percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES ('{uid}','{momemtum}',current_timestamp,'{symbol}', '{price}','{percent}','{price}', '{percent}', 1, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
-        if myresult is None:
-            mycursor.execute(sql)
-            self.MYSQL_DB.commit()
-            Logging(symbol=symbol, msg=f'NEW RECORD :=> {uid}')
-            print(f'insert db :=> {symbol}')
-
-        return True
-
     def update(self,
                symbol='None',
                price=0,
@@ -86,4 +65,27 @@ class MysqlService:
 
         ### บันทึกราคาทุกๆ 30นาที
         self.logs(symbol, price, percent)
+        return True
+
+    def insert(self,
+               symbol='None',
+               price=0,
+               percent=0,
+               is_trend=1,
+               avg_score=0,
+               momemtum='None'):
+        mycursor = self.MYSQL_DB.cursor()
+        sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and momemtum='{momemtum}' and is_activate=1"
+        mycursor.execute(sql)
+        myresult = mycursor.fetchone()
+        uid = str(uuid.uuid4())
+        sql = f"""INSERT INTO tbt_subscribe(id,momemtum,etd,symbol,on_price,on_percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES ('{uid}','{momemtum}',current_timestamp,'{symbol}', '{price}','{percent}','{price}', '{percent}', 1, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
+        if myresult is None:
+            mycursor.execute(sql)
+            self.MYSQL_DB.commit()
+            Logging(symbol=symbol, msg=f'NEW RECORD :=> {uid}')
+            print(f'insert db :=> {symbol}')
+
+        ## update ราคาปัจจุบัน
+        self.update(symbol=symbol, price=price, percent=percent)
         return True
