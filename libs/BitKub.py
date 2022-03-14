@@ -129,6 +129,10 @@ class BitKub:
             pass
         
         last_price = self.price(product=symbol)
+        
+        ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ 4%
+        if last_price[1] >= 4:
+            x = True
         return {
             'close': x,
             "symbol": symbol,
