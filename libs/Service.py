@@ -10,6 +10,12 @@ class MysqlService:
                                password=os.getenv('MYSQL_PASSWORD'),
                                database=os.getenv('MYSQL_DBNAME'))
         
+    def logs(self, symbol, price, percent):
+        mycursor = self.MYSQL_DB.cursor()
+        sql = f"INSERT INTO trend_db.tbt_symbol_log(id, `date`, symbol, price, percent)VALUES('{str(uuid.uuid4())}', current_timestamp, '{symbol}', {price}, {percent})"
+        mycursor.execute(sql)
+        self.MYSQL_DB.commit()
+        
     def insert(self, symbol='None', price=0, percent=0, is_trend=1, avg_score=0):
         mycursor = self.MYSQL_DB.cursor()
         sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and is_activate=1"
@@ -22,6 +28,7 @@ class MysqlService:
             self.MYSQL_DB.commit()
             Logging(symbol=symbol, msg=f'NEW RECORD :=> {uid}')
             print(f'insert db :=> {symbol}')
+            
         return True
         
     def update(self, symbol='None', price=0, percent=0, avg_score=0, up_price=False):
@@ -59,5 +66,8 @@ class MysqlService:
             self.MYSQL_DB.commit()
             print(f'{txt} {symbol}:=> {myresult[0]}')
             Logging(symbol=symbol, msg=f'SUBSCIBE {txt} :=> {myresult[0]} PROFIT: {(price-myresult[1])}')
+        
+        ### บันทึกราคาทุกๆ 30นาที
+        self.logs(symbol, price, percent)
         return True
         
