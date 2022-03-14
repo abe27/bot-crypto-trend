@@ -6,6 +6,7 @@ import hashlib
 from datetime import datetime
 from termcolor import colored
 from tradingview_ta import TA_Handler, Interval, Exchange
+from libs.Logging import Logging
 
 @staticmethod
 def get_recomment(obj):
@@ -109,7 +110,8 @@ class BitKub:
                 float(ticker[f'THB_{product}']['percentChange'])
             ]
 
-        except:
+        except Exception as e:
+            Logging(symbol=product, msg=e.message)
             pass
 
         return [0, 0]
@@ -125,7 +127,8 @@ class BitKub:
             mv_avg = get_recomment(summary)
             if str(mv_avg).find('BUY') >= 0:
                 x = True
-        except:
+        except Exception as e:
+            Logging(symbol=symbol, msg=e.message)
             pass
         
         last_price = self.price(product=symbol)
@@ -159,7 +162,8 @@ class BitKub:
                 summary['SYMBOL'] = symbol
                 summary['QOUTE'] = "THB"
                 summary['ON_TIME'] = t
-            except:
+            except Exception as e:
+                Logging(symbol=symbol, msg=e.message)
                 pass
             
             if len(summary) > 0:
