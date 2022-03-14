@@ -13,7 +13,7 @@ class MysqlService:
             database=os.getenv('MYSQL_DBNAME'))
 
     def logs(self, symbol, price, percent):
-        mycursor = self.MYSQL_DB.cursor()
+        mycursor = self.MYSQL_DB.cursor(buffered=True)
         sql = f"INSERT INTO trend_db.tbt_symbol_log(id, `date`, symbol, price, percent)VALUES('{str(uuid.uuid4())}', current_timestamp, '{symbol}', {price}, {percent})"
         mycursor.execute(sql)
         self.MYSQL_DB.commit()
@@ -24,7 +24,7 @@ class MysqlService:
                percent=0,
                avg_score=0,
                up_price=False):
-        mycursor = self.MYSQL_DB.cursor()
+        mycursor = self.MYSQL_DB.cursor(buffered=True)
         sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and is_activate=1"
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
@@ -54,6 +54,7 @@ class MysqlService:
                 last_update=current_timestamp
                 where symbol='{symbol}' and is_activate=1"""
 
+            # print(sql)
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
             print(f'{txt} {symbol}:=> {myresult[0]}')
@@ -74,7 +75,7 @@ class MysqlService:
                is_trend=1,
                avg_score=0,
                momemtum='None'):
-        mycursor = self.MYSQL_DB.cursor()
+        mycursor = self.MYSQL_DB.cursor(buffered=True)
         sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and momemtum='{momemtum}' and is_activate=1"
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
