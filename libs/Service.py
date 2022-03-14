@@ -83,7 +83,7 @@ class MysqlService:
         if myresult is None:
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
-            Logging(symbol=symbol, msg=f'NEW RECORD :=> {uid}')
+            Logging(symbol=symbol, msg=f'NEW {momemtum} RECORD :=> {uid}')
             print(f'insert db :=> {symbol}')
 
         ## update ราคาปัจจุบัน
