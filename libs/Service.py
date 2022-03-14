@@ -21,8 +21,7 @@ class MysqlService:
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
             Logging(symbol=symbol, msg=f'NEW RECORD :=> {uid}')
-        
-        print(f'insert db :=> {symbol}')
+            print(f'insert db :=> {symbol}')
         return True
         
     def update(self, symbol='None', price=0, percent=0, avg_score=0, up_price=False):
