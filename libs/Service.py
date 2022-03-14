@@ -29,6 +29,7 @@ class MysqlService:
         sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and is_activate=1"
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
+        txt = 'price'
         if myresult != None:
             sql = f"""update tbt_subscribe set 
                 last_price='{price}',
@@ -37,9 +38,13 @@ class MysqlService:
                 where id='{myresult[0]}'"""
                 
             if up_price:
-                is_stats = 0
-                if price >= float(myresult[1]):
-                    is_stats = 1
+                is_stats = 1
+                txt = 'update order'
+                ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ 4%
+                ## ถ้าตรงตามเงื่อนไขให้ทำการปิดออร์เดอร์ในทันที
+                if percent >= 4:
+                    is_stats = 0
+                    txt = 'close order'
                     
                 sql = f"""update tbt_subscribe set 
                 last_price='{price}',
@@ -52,7 +57,6 @@ class MysqlService:
                 
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
-            
-        print(f'update db :=> {myresult[0]}')
+            print(f'{symbol} update {txt} :=> {myresult[0]}')
         return True
         
