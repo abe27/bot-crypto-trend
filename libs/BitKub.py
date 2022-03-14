@@ -173,7 +173,7 @@ class BitKub:
             
             if len(summary) > 0:
                 x = 0
-                if str(summ).find('STRONG_SELL') >= 0 or str(summ).find('NEUTRAL') >= 0: x = 1
+                if str(summ).find('STRONG_SELL') >= 0: x = 1
                 
                 txt_color = "green"
                 if x == 0: txt_color = "red"
