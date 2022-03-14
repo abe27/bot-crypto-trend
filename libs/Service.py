@@ -57,6 +57,6 @@ class MysqlService:
                 
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
-            print(f'{symbol} update {txt} :=> {myresult[0]}')
+            print(f'update {txt} {symbol}:=> {myresult[0]}')
         return True
         
