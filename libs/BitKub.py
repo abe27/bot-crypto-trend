@@ -8,7 +8,6 @@ from termcolor import colored
 from tradingview_ta import TA_Handler, Interval, Exchange
 from libs.Logging import Logging
 
-@staticmethod
 def get_recomment(obj):
     recomm = "-"
     if obj != None:
