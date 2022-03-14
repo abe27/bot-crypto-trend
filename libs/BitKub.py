@@ -41,7 +41,7 @@ class BitKub:
             self.INTERVAL_1_HOUR,
             self.INTERVAL_2_HOURS,
             self.INTERVAL_4_HOURS,
-            self.INTERVAL_1_DAY,
+            # self.INTERVAL_1_DAY,
             # self.INTERVAL_1_WEEK,
             # self.INTERVAL_1_MONTH,
         ]
