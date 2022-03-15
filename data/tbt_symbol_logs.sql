@@ -6,5 +6,6 @@ CREATE TABLE `tbt_signals` (
   `symbol` char(20) NOT NULL,
   `price` double NOT NULL,
   `percent` double DEFAULT 0,
+  `last_update` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -32,7 +32,10 @@ def main():
                             is_trend=0,
                             avg_score=x['avg_score'],
                             momemtum=x['momemtum'])
-
+        
+        ## บันทึกข้อมูลราคา
+        last_price = bitkub.price(symbol=s)
+        mydb.logs(symbol=s, price=last_price[0], percent=last_price[1])
     server_time = bitkub.timestamps()
     print(
         colored(f"end run datetime on server: {server_time['datetime']}",
