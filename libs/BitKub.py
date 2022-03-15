@@ -176,8 +176,7 @@ class BitKub:
             
             if len(summary) > 0:
                 x = 0
-                ### บันทึกข้อมูลเฉพาะราคาติดลบ 4%
-                if str(summ).find('SELL') >= 0: 
+                if str(summ).find('SELL') > 0: 
                     x = 1
                 
                 txt_color = "green"
@@ -205,7 +204,7 @@ class BitKub:
             
         price = f"{last_price[0]:,}"
         trend = False
-        if last_price[1] <= -4:
+        if last_price[1] < 0:
             trend = True
             
         print(

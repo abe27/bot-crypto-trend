@@ -22,7 +22,8 @@ def main():
     symbols = bitkub.symbols()
     for s in symbols:
         print(colored(f"start new order loop {s}", "green"))
-        momemtum = ['SUM', 'MA', 'OSCI']
+        # momemtum = ['SUM', 'MA', 'OSCI']
+        momemtum = ['MA']
         for m in momemtum:
             x = bitkub.check_trend(symbol=s, momemtum=m)
             if x['trend'] == 'Buy' and x['interesting'] is True:
