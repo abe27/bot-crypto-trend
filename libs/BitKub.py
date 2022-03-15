@@ -211,6 +211,7 @@ class BitKub:
         print(
             f"{symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(total_avg, txt_color)}"
         )
+        Logging(symbol=symbol,msg=f'{momemtum} IS {interesting}({last_price[1]})%')
             
         return {
             "interesting": trend,
