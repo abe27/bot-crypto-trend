@@ -31,6 +31,7 @@ class MysqlService:
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
         txt = 'UPDATE PRICE'
+        is_stats = 1
         if myresult != None:
             sql = f"""update tbt_subscribe set 
                 last_price='{price}',
@@ -39,11 +40,13 @@ class MysqlService:
                 where symbol='{symbol}' and is_activate=1"""
 
             if up_price:
-                is_stats = 1
                 txt = 'UPDATE ORDER'
                 ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ 4%
                 ## ถ้าตรงตามเงื่อนไขให้ทำการปิดออร์เดอร์ในทันที
-                if percent > 4 or (float(str(myresult[1])) - price) < -4:
+                profit_limit = float(os.getenv('PROFIT_PERCENT', 10))
+                pog = abs(profit_limit)
+                neg = profit_limit * (-1)
+                if percent > pog or (float(str(myresult[1])) - price) < neg:
                     is_stats = 0
                     txt = 'CLOSE ORDER'
                     
@@ -63,7 +66,7 @@ class MysqlService:
             Logging(
                 symbol=symbol,
                 msg=
-                f'SUBSCIBE {txt} :=> {myresult[0]} PROFIT: {(price-myresult[1])}'
+                f'SUBSCIBE {txt} :=> {myresult[0]} PROFIT: {(price-myresult[1])} STATUS: {is_stats}'
             )
 
         ### บันทึกราคาทุกๆ 30นาที
