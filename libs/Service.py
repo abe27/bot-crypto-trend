@@ -14,10 +14,11 @@ class MysqlService:
             database=os.getenv('MYSQL_DBNAME'))
 
     def logs(self, symbol, price, percent):
-        mycursor = self.MYSQL_DB.cursor(buffered=True)
-        sql = f"INSERT INTO trend_db.tbt_signals(id, `date`, symbol, price, percent)VALUES('{str(generate(key_generate, 21))}', current_timestamp, '{symbol}', {price}, {percent})"
-        mycursor.execute(sql)
-        self.MYSQL_DB.commit()
+        if price > 0:
+            mycursor = self.MYSQL_DB.cursor(buffered=True)
+            sql = f"INSERT INTO trend_db.tbt_signals(id, `date`, symbol, price, percent)VALUES('{str(generate(key_generate, 21))}', current_timestamp, '{symbol}', {price}, {percent})"
+            mycursor.execute(sql)
+            self.MYSQL_DB.commit()
 
     def update(self,
                symbol='None',
