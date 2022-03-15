@@ -173,10 +173,14 @@ class BitKub:
             # except Exception as e:
             #     Logging(symbol='ERROR', msg=f'{symbol} {momemtum}:{e}')
             #     pass
-            
+            trend = False
+            last_price = self.price(symbol=symbol)
             if len(summary) > 0:
                 x = 0
-                if str(summ).find('SELL') >= 0: x = 1
+                ### บันทึกข้อมูลเฉพาะราคาติดลบ 4%
+                if str(summ).find('SELL') >= 0 and last_price[1] <= -4: 
+                    x = 1
+                    trend = True
                 
                 txt_color = "green"
                 if x == 0: txt_color = "red"
@@ -188,7 +192,7 @@ class BitKub:
         if score >= len(self.timeframe()):
             interesting = "Buy"
             txt_color = "green"
-        last_price = self.price(symbol=symbol)
+        
         if last_price[0] == 0:
             interesting = "-"
             txt_color = "magenta"
@@ -199,11 +203,6 @@ class BitKub:
             txt_color = "green"
             total_avg = 1
             
-        trend = False
-        ### บันทึกข้อมูลเฉพาะราคาติดลบ 4%
-        if last_price[1] <= -4:
-            trend = True
-        
         price = f"{last_price[0]:,}"
         if trend is False:
             txt_color = 'red'

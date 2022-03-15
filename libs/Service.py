@@ -3,7 +3,7 @@ from nanoid import generate
 import mysql.connector
 from libs.Logging import Logging
 
-key_generate = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+key_generate = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 class MysqlService:
     def __init__(self):
@@ -42,10 +42,11 @@ class MysqlService:
                 txt = 'UPDATE ORDER'
                 ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ 4%
                 ## ถ้าตรงตามเงื่อนไขให้ทำการปิดออร์เดอร์ในทันที
-                if percent >= 4:
+                per_limit = 4
+                if percent > per_limit or (price - float(str(myresult[1]))) > per_limit:
                     is_stats = 0
                     txt = 'CLOSE ORDER'
-
+                    
                 sql = f"""update tbt_subscribe set 
                 last_price='{price}',
                 percent_change='{percent}',
@@ -53,7 +54,7 @@ class MysqlService:
                 is_trend={is_stats},
                 avg_score={avg_score},
                 last_update=current_timestamp
-                where symbol='{symbol}' and is_activate=1"""
+                where id='{str(myresult[0])}'"""
 
             # print(sql)
             mycursor.execute(sql)
