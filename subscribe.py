@@ -34,7 +34,7 @@ def subscribe():
                 "red"))
     # update subscribe
     mycursor = mydb.MYSQL_DB.cursor()
-    sql = f"select symbol  from tbt_subscribe where is_activate=1 group by symbol order by symbol"
+    sql = f"select symbol  from tbt_investments where is_activate=1 group by symbol order by symbol"
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
     for i in myresult:
