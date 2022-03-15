@@ -1,8 +1,9 @@
 import os
-import uuid
+from nanoid import generate
 import mysql.connector
 from libs.Logging import Logging
 
+key_generate = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 
 class MysqlService:
     def __init__(self):
@@ -14,7 +15,7 @@ class MysqlService:
 
     def logs(self, symbol, price, percent):
         mycursor = self.MYSQL_DB.cursor(buffered=True)
-        sql = f"INSERT INTO trend_db.tbt_symbol_log(id, `date`, symbol, price, percent)VALUES('{str(uuid.uuid4())}', current_timestamp, '{symbol}', {price}, {percent})"
+        sql = f"INSERT INTO trend_db.tbt_signals(id, `date`, symbol, price, percent)VALUES('{str(generate(key_generate, 21))}', current_timestamp, '{symbol}', {price}, {percent})"
         mycursor.execute(sql)
         self.MYSQL_DB.commit()
 
@@ -79,8 +80,8 @@ class MysqlService:
         sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and momemtum='{momemtum}' and is_activate=1"
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
-        uid = str(uuid.uuid4())
-        sql = f"""INSERT INTO tbt_subscribe(id,momemtum,etd,symbol,on_price,on_percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES ('{uid}','{momemtum}',current_timestamp,'{symbol}', '{price}','{percent}','{price}', '{percent}', 1, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
+        uid = str(generate(key_generate, 21))
+        sql = f"""INSERT INTO tbt_subscribe(id,momemtum,symbol,on_price,on_percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES ('{uid}','{momemtum}','{symbol}', '{price}','{percent}','{price}', '{percent}', 1, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
         if myresult is None:
             mycursor.execute(sql)
             self.MYSQL_DB.commit()

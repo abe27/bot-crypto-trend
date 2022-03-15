@@ -1,9 +1,8 @@
 -- trend_db.tbt_subscribe definition
 
 CREATE TABLE `tbt_subscribe` (
-  `id` char(36) NOT NULL DEFAULT uuid(),
+  `id` char(21) NOT NULL,
   `momemtum` char(25) NOT NULL,
-  `etd` date NOT NULL,
   `symbol` char(10) NOT NULL,
   `on_price` double NOT NULL,
   `on_percent` double NOT NULL,
