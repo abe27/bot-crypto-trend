@@ -1,6 +1,6 @@
 -- trend_db.tbt_subscribe definition
 
-CREATE TABLE `tbt_investment` (
+CREATE TABLE `tbt_investments` (
   `id` char(21) NOT NULL,
   `momemtum` char(25) NOT NULL,
   `symbol` char(10) NOT NULL,

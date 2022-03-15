@@ -16,7 +16,7 @@ class MysqlService:
     def logs(self, symbol, price, percent):
         if price > 0:
             mycursor = self.MYSQL_DB.cursor(buffered=True)
-            sql = f"INSERT INTO trend_db.tbt_signals(id, `date`, symbol, price, percent)VALUES('{str(generate(key_generate, 21))}', current_timestamp, '{symbol}', {price}, {percent})"
+            sql = f"INSERT INTO tbt_signals(id, `date`, symbol, price, percent)VALUES('{str(generate(key_generate, 21))}', current_timestamp, '{symbol}', {price}, {percent})"
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
 
@@ -27,13 +27,13 @@ class MysqlService:
                avg_score=0,
                up_price=False):
         mycursor = self.MYSQL_DB.cursor(buffered=True)
-        sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and is_activate=1"
+        sql = f"select id,price from tbt_investments where symbol='{symbol}' and is_activate=1"
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
         txt = 'UPDATE PRICE'
         is_stats = 1
         if myresult != None:
-            sql = f"""update tbt_subscribe set 
+            sql = f"""update tbt_investments set 
                 last_price='{price}',
                 percent_change='{percent}',
                 last_update=current_timestamp
@@ -50,7 +50,7 @@ class MysqlService:
                     is_stats = 0
                     txt = 'CLOSE ORDER'
                     
-                sql = f"""update tbt_subscribe set 
+                sql = f"""update tbt_investments set 
                 last_price='{price}',
                 percent_change='{percent}',
                 is_activate={is_stats},
@@ -81,11 +81,11 @@ class MysqlService:
                avg_score=0,
                momemtum='None'):
         mycursor = self.MYSQL_DB.cursor(buffered=True)
-        sql = f"select id,on_price from tbt_subscribe where symbol='{symbol}' and momemtum='{momemtum}' and is_activate=1"
+        sql = f"select id,price from tbt_investments where symbol='{symbol}' and momemtum='{momemtum}' and is_activate=1"
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
         uid = str(generate(key_generate, 21))
-        sql = f"""INSERT INTO tbt_subscribe(id,momemtum,symbol,on_price,on_percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES ('{uid}','{momemtum}','{symbol}', '{price}','{percent}','{price}', '{percent}', 1, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
+        sql = f"""INSERT INTO tbt_investments(id,momemtum,symbol,price,percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES ('{uid}','{momemtum}','{symbol}', '{price}','{percent}','{price}', '{percent}', 1, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
         if myresult is None:
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
