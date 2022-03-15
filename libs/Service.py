@@ -42,8 +42,7 @@ class MysqlService:
                 txt = 'UPDATE ORDER'
                 ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ 4%
                 ## ถ้าตรงตามเงื่อนไขให้ทำการปิดออร์เดอร์ในทันที
-                per_limit = 4
-                if percent > per_limit or (price - float(str(myresult[1]))) > per_limit:
+                if percent > 4 or (float(str(myresult[1])) - price) < -4:
                     is_stats = 0
                     txt = 'CLOSE ORDER'
                     
