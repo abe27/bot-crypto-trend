@@ -165,11 +165,13 @@ class BitKub:
         
         ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด     
         last_price = self.price(symbol=symbol)
+        trend = False
         interesting = "Sell"
         txt_color = "red"
         total_timeframe = len(self.timeframe())
         ### ตรวจสอบคะแนน avg > timeframe.length
         if score >= len(self.timeframe()) or (score - total_timeframe) >= 0:
+            trend = True
             interesting = "Buy"
             txt_color = "green"
         
@@ -179,12 +181,12 @@ class BitKub:
             txt_color = "magenta"
             
         price = f"{last_price[0]:,}"
-        trend = False
-        # profit_limit = float(os.getenv('PROFIT_PERCENT', 10))
-        # neg = profit_limit * (-1)
-        ### ตรวจสอบเปอร์เซนต์การเปลี่ยนแปลงต้อง < 0 กำหนดเป็นขาขึ้น
-        if last_price[1] < 0:
-            trend = True
+        # trend = False
+        # # profit_limit = float(os.getenv('PROFIT_PERCENT', 10))
+        # # neg = profit_limit * (-1)
+        # ### ตรวจสอบเปอร์เซนต์การเปลี่ยนแปลงต้อง < 0 กำหนดเป็นขาขึ้น
+        # if last_price[1] <= 0:
+        #     trend = True
             
         print(
             f"{symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"

@@ -99,6 +99,6 @@ class MysqlService:
             Logging(symbol=symbol, msg=f'NEW {momemtum} RECORD :=> {uid}')
             print(f'insert db :=> {symbol}')
 
-        ## update ราคาปัจจุบัน
-        self.update(symbol=symbol, price=price, percent=percent)
+        # ## update ราคาปัจจุบัน
+        # self.update(symbol=symbol, price=price, percent=percent)
         return True
