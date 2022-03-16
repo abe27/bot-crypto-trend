@@ -8,13 +8,6 @@ from termcolor import colored
 from tradingview_ta import TA_Handler, Interval, Exchange
 from libs.Logging import Logging
 
-def get_recomment(obj):
-    recomm = "-"
-    if obj != None:
-        recomm = obj['RECOMMENDATION']
-        
-    return recomm
-
 class BitKub:
     def __init__(self):
         # Initial envs.
@@ -123,7 +116,7 @@ class BitKub:
                             exchange="Bitkub",
                             interval=self.INTERVAL_30_MINUTES)
             summary = ta.get_analysis().moving_averages
-            mv_avg = get_recomment(summary)
+            mv_avg = summary['RECOMMENDATION']
             if str(mv_avg).find('BUY') >= 0:
                 x = True
         except:pass
@@ -140,7 +133,7 @@ class BitKub:
             "percent": last_price[1],
         }
     
-    
+    ### function ตรวจสอบ Trend
     def check_trend(self, symbol, momemtum='SUM'):
         score = 0
         for t in self.timeframe():
@@ -155,34 +148,31 @@ class BitKub:
             try:
                 if momemtum == 'SUM':
                     summary = ta.get_analysis().summary
-                    summ = get_recomment(summary)
+                    summ = summary['RECOMMENDATION']
                 
                 elif momemtum == 'MA':
                     summary = ta.get_analysis().moving_averages
-                    summ = get_recomment(summary)
+                    summ = summary['RECOMMENDATION']
                 
                 elif momemtum == 'OSCI':
                     summary = ta.get_analysis().oscillators
-                    summ = get_recomment(summary)
-                    
-                summary['SYMBOL'] = symbol
-                summary['QOUTE'] = "THB"
-                summary['ON_TIME'] = t
-                
+                    summ = summary['RECOMMENDATION']
             except:pass
             # except Exception as e:
             #     Logging(symbol='ERROR', msg=f'{symbol} {momemtum}:{e}')
             #     pass
+            summary['SYMBOL'] = symbol
+            summary['QOUTE'] = "THB"
+            summary['ON_TIME'] = t
             
-            if len(summary) > 0:
-                x = 0
-                if str(summ).find('SELL') >= 0: 
-                    x = 1
-                
+            x = 0
+            txt_color = "red"
+            if str(summ) == "STRONG_SELL":
+                x = 1
                 txt_color = "green"
-                if x == 0: txt_color = "red"
-                print(f"{symbol} {momemtum}: {colored(summ, txt_color)} ON:{t} SCORE: {x}")
-                score += x
+                
+            print(f"{symbol} {momemtum}: {colored(summ, txt_color)} ON:{t} SCORE: {x}")
+            score += x
                 
         last_price = self.price(symbol=symbol)
         interesting = "Sell"
@@ -204,9 +194,9 @@ class BitKub:
             
         price = f"{last_price[0]:,}"
         trend = False
-        profit_limit = float(os.getenv('PROFIT_PERCENT', 10))
-        neg = profit_limit * (-1)
-        if last_price[1] < neg:
+        # profit_limit = float(os.getenv('PROFIT_PERCENT', 10))
+        # neg = profit_limit * (-1)
+        if last_price[1] < 0:
             trend = True
             
         print(

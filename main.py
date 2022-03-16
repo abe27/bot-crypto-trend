@@ -18,13 +18,15 @@ def main():
         colored(f"start run datetime on server: {server_time['datetime']}",
                 "red"))
     Logging(symbol='SEARCH', msg=f"START AT: {server_time['timestamp']}")
-    # get net trend
+    # ดึงข้อมูลรายการ symbol ใน bitkub
     symbols = bitkub.symbols()
     for s in symbols:
         print(colored(f"start new order loop {s}", "green"))
         # momemtum = ['SUM', 'MA', 'OSCI']
+        ## ตรวจสอบข้อมูล Momemtum MA
         momemtum = ['MA']
         for m in momemtum:
+            ## ตรวจสอบ Trend ด้วย Momemtum
             x = bitkub.check_trend(symbol=s, momemtum=m)
             if x['trend'] == 'Buy' and x['interesting'] is True:
                 mydb.insert(symbol=x['symbol'],
