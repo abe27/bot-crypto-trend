@@ -27,7 +27,7 @@ class MysqlService:
                avg_score=0,
                up_price=False):
         mycursor = self.MYSQL_DB.cursor(buffered=True)
-        sql = f"select id,price from tbt_investments where symbol='{symbol}' and is_activate=1"
+        sql = f"select id,price,last_price from tbt_investments where symbol='{symbol}' and is_activate=1"
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
         txt = 'UPDATE PRICE'
@@ -35,6 +35,9 @@ class MysqlService:
         is_trend = 0
         if price > float(str(myresult[1])):is_trend=1
         if myresult != None:
+            current_price = float(str(myresult[1]))
+            last_price = float(str(myresult[2]))
+            
             sql = f"""update tbt_investments set 
                 last_price='{price}',
                 percent_change='{percent}',
@@ -49,6 +52,7 @@ class MysqlService:
                 profit_limit = float(os.getenv('PROFIT_PERCENT', 10))
                 pog = abs(profit_limit)
                 neg = profit_limit * (-1)
+                
                 if percent > pog or (price - float(str(myresult[1]))) < neg:
                     is_stats = 0
                     txt = 'CLOSE ORDER'
