@@ -136,16 +136,17 @@ class BitKub:
     ### function ตรวจสอบ Trend
     def check_trend(self, symbol, momemtum='SUM'):
         score = 0
+        ### loop ด้วย timeframe
         for t in self.timeframe():
+            ### ตรวจสอบ trend จาก web tradingview
             ta = TA_Handler(symbol=f"{symbol}THB",
                             screener="crypto",
                             exchange="Bitkub",
                             interval=t)
             summ = '-'
-            # mv_avg = '-'
-            # oscillator = '-'
             summary = []
             try:
+                ### เช็คเงื่อนไข
                 if momemtum == 'SUM':
                     summary = ta.get_analysis().summary
                     summ = summary['RECOMMENDATION']
@@ -158,49 +159,47 @@ class BitKub:
                     summary = ta.get_analysis().oscillators
                     summ = summary['RECOMMENDATION']
             except:pass
-            # except Exception as e:
-            #     Logging(symbol='ERROR', msg=f'{symbol} {momemtum}:{e}')
-            #     pass
+            
             summary['SYMBOL'] = symbol
             summary['QOUTE'] = "THB"
             summary['ON_TIME'] = t
             
             x = 0
             txt_color = "red"
+            ### กรอง recomment ที่เป็น strong sell
             if str(summ) == "STRONG_SELL":
                 x = 1
                 txt_color = "green"
                 
             print(f"{symbol} {momemtum}: {colored(summ, txt_color)} ON:{t} SCORE: {x}")
+            ### ทำคะแนน avg
             score += x
-                
+        
+        ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด     
         last_price = self.price(symbol=symbol)
         interesting = "Sell"
         txt_color = "red"
-        if score >= len(self.timeframe()):
+        total_timeframe = len(self.timeframe())
+        ### ตรวจสอบคะแนน avg > timeframe.length
+        if score >= len(self.timeframe()) or (score - total_timeframe) >= 0:
             interesting = "Buy"
             txt_color = "green"
         
+        ### ตรวจสอบราคาล่าสุด
         if last_price[0] == 0:
             interesting = "-"
             txt_color = "magenta"
-            
-        total_timeframe = len(self.timeframe())
-        total_avg = 0
-        if (score - total_timeframe) >= 0:
-            interesting = "Buy"
-            txt_color = "green"
-            total_avg = 1
             
         price = f"{last_price[0]:,}"
         trend = False
         # profit_limit = float(os.getenv('PROFIT_PERCENT', 10))
         # neg = profit_limit * (-1)
+        ### ตรวจสอบเปอร์เซนต์การเปลี่ยนแปลงต้อง < 0 กำหนดเป็นขาขึ้น
         if last_price[1] < 0:
             trend = True
             
         print(
-            f"{symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(total_avg, txt_color)}"
+            f"{symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
         )
         Logging(symbol=symbol,msg=f'{momemtum} IS {interesting}({last_price[1]})%')
             

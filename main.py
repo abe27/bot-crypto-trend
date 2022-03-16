@@ -29,6 +29,7 @@ def main():
             ## ตรวจสอบ Trend ด้วย Momemtum
             x = bitkub.check_trend(symbol=s, momemtum=m)
             if x['trend'] == 'Buy' and x['interesting'] is True:
+                ### ถ้าเป็นขาขึ้นให้บันทึกข้อมูล
                 mydb.insert(symbol=x['symbol'],
                             price=x['price'],
                             percent=x['percent'],
@@ -36,9 +37,6 @@ def main():
                             avg_score=x['avg_score'],
                             momemtum=x['momemtum'])
         
-        # ## บันทึกข้อมูลราคา
-        # last_price = bitkub.price(symbol=s)
-        # mydb.logs(symbol=s, price=last_price[0], percent=last_price[1])
     server_time = bitkub.timestamps()
     print(
         colored(f"end run datetime on server: {server_time['datetime']}",
