@@ -5,7 +5,7 @@ import hmac
 import hashlib
 from datetime import datetime
 from termcolor import colored
-from tradingview_ta import TA_Handler, Interval, Exchange
+from tradingview_ta import TA_Handler
 from libs.Logging import Logging
 
 class BitKub:
@@ -115,8 +115,8 @@ class BitKub:
                             screener="crypto",
                             exchange="Bitkub",
                             interval=self.INTERVAL_30_MINUTES)
-            summary = ta.get_analysis().moving_averages
-            mv_avg = summary['RECOMMENDATION']
+            
+            mv_avg = ta.get_analysis().moving_averages['RECOMMENDATION']
             if str(mv_avg).find('BUY') >= 0:
                 x = True
         except:pass
