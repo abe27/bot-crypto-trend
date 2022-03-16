@@ -46,7 +46,7 @@ class MysqlService:
                 profit_limit = float(os.getenv('PROFIT_PERCENT', 10))
                 pog = abs(profit_limit)
                 neg = profit_limit * (-1)
-                if percent > pog or (float(str(myresult[1])) - price) < neg:
+                if percent > pog or (price - float(str(myresult[1]))) < neg:
                     is_stats = 0
                     txt = 'CLOSE ORDER'
                     
