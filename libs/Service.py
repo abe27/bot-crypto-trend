@@ -64,7 +64,7 @@ class MysqlService:
             # print(sql)
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
-            print(f'{txt} {symbol}:=> {myresult[0]}')
+            print(f'{txt} {symbol}:=> {myresult[0]} last: {price}')
             Logging(
                 symbol=symbol,
                 msg=
