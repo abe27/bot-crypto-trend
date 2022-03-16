@@ -39,12 +39,13 @@ def subscribe():
     myresult = mycursor.fetchall()
     for i in myresult:
         print(colored(f"start subscribe loop {i[0]}", "blue"))
-        x = bitkub.check_subscibe(symbol=i[0])
-        ## update last price and check trend
-        mydb.update(symbol=x['symbol'],
-                        price=x['price'],
-                        percent=x['percent'],
-                        up_price=x['close'])
+        mydb.update(symbol=i[0])
+        # x = bitkub.check_subscibe(symbol=i[0])
+        # ## update last price and check trend
+        # mydb.update(symbol=x['symbol'],
+        #                 price=x['price'],
+        #                 percent=x['percent'],
+        #                 up_price=x['close'])
 
     server_time = bitkub.timestamps()
     print(

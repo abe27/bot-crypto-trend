@@ -2,7 +2,9 @@ import os
 from nanoid import generate
 import mysql.connector
 from libs.Logging import Logging
+from libs.BitKub import BitKub
 
+bitkub = BitKub()
 key_generate = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 
@@ -21,12 +23,10 @@ class MysqlService:
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
 
-    def update(self,
-               symbol='None',
-               price=0,
-               percent=0,
-               avg_score=0,
-               up_price=False):
+    def update(self, symbol='None'):
+        bb = bitkub.price(symbol=symbol)
+        price = float(bb[0])
+        percent = float(bb[1])
         mycursor = self.MYSQL_DB.cursor(buffered=True)
         sql = f"select id,price,last_price from tbt_investments where symbol='{symbol}' and is_activate=1"
         mycursor.execute(sql)
@@ -34,7 +34,7 @@ class MysqlService:
         txt = 'UPDATE PRICE'
         is_stats = 1
         is_trend = 1
-        if price > float(str(myresult[1])): is_trend = 1
+        
         if myresult != None:
             current_price = float(str(myresult[1]))
             # last_price = float(str(myresult[2]))
@@ -44,31 +44,20 @@ class MysqlService:
             neg = profit_limit * (-1)
             percent_profit = (pog * current_price) / 100
             profit = price - current_price
-            if profit < 0:
-                is_trend = 0
+            if profit < 0 or price < float(str(myresult[1])):is_trend = 0
+
+            ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ 4%
+            ## ถ้าตรงตามเงื่อนไขให้ทำการปิดออร์เดอร์ในทันที
+            if profit > percent_profit or percent > pog or (
+                    price - float(str(myresult[1]))) < neg:
+                is_stats = 0
+                txt = 'CLOSE ORDER'
 
             sql = f"""update tbt_investments set 
                 last_price='{price}',
                 percent_change='{percent}',
-                is_trend={is_trend},
-                last_update=current_timestamp
-                where symbol='{symbol}' and is_activate=1"""
-
-            if up_price:
-                txt = 'UPDATE ORDER'
-                ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ 4%
-                ## ถ้าตรงตามเงื่อนไขให้ทำการปิดออร์เดอร์ในทันที
-                if profit > percent_profit or percent > pog or (
-                        price - float(str(myresult[1]))) < neg:
-                    is_stats = 0
-                    txt = 'CLOSE ORDER'
-
-                sql = f"""update tbt_investments set 
-                last_price='{price}',
-                percent_change='{percent}',
                 is_activate={is_stats},
                 is_trend={is_trend},
-                avg_score={avg_score},
                 last_update=current_timestamp
                 where id='{str(myresult[0])}'"""
 
