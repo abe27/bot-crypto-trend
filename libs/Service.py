@@ -32,10 +32,13 @@ class MysqlService:
         myresult = mycursor.fetchone()
         txt = 'UPDATE PRICE'
         is_stats = 1
+        is_trend = 0
+        if price > float(str(myresult[1])):is_trend=1
         if myresult != None:
             sql = f"""update tbt_investments set 
                 last_price='{price}',
                 percent_change='{percent}',
+                is_trend={is_trend},
                 last_update=current_timestamp
                 where symbol='{symbol}' and is_activate=1"""
 
@@ -54,7 +57,7 @@ class MysqlService:
                 last_price='{price}',
                 percent_change='{percent}',
                 is_activate={is_stats},
-                is_trend={is_stats},
+                is_trend={is_trend},
                 avg_score={avg_score},
                 last_update=current_timestamp
                 where id='{str(myresult[0])}'"""
