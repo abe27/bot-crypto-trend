@@ -87,13 +87,16 @@ class MysqlService:
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
         uid = str(generate(key_generate, 21))
-        sql = f"""INSERT INTO tbt_investments(id,momemtum,symbol,price,percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES ('{uid}','{momemtum}','{symbol}', '{price}','{percent}','{price}', '{percent}', 1, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
+        
         if myresult is None:
-            mycursor.execute(sql)
-            self.MYSQL_DB.commit()
+            sql = f"""INSERT INTO tbt_investments(id,momemtum,symbol,price,percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES ('{uid}','{momemtum}','{symbol}', '{price}','{percent}','{price}', '{percent}', 1, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
             Logging(symbol=symbol, msg=f'NEW {momemtum} RECORD :=> {uid}')
             print(f'insert db :=> {symbol}')
-
-        # ## update ราคาปัจจุบัน
-        # self.update(symbol=symbol, price=price, percent=percent)
+            mycursor.execute(sql)
+            self.MYSQL_DB.commit()
+            
+        else:
+            # ## update ราคาปัจจุบัน
+            self.update(symbol=symbol)
+            
         return True
