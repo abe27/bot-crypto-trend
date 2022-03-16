@@ -134,7 +134,7 @@ class BitKub:
         }
     
     ### function ตรวจสอบ Trend
-    def check_trend(self, symbol, momemtum='SUM'):
+    def check_trend(self, symbol, momemtum='MA'):
         score = 0
         ### loop ด้วย timeframe
         for t in self.timeframe():
@@ -144,25 +144,13 @@ class BitKub:
                             exchange="Bitkub",
                             interval=t)
             summ = '-'
-            summary = []
             try:
                 ### เช็คเงื่อนไข
-                if momemtum == 'SUM':
-                    summary = ta.get_analysis().summary
-                    summ = summary['RECOMMENDATION']
-                
-                elif momemtum == 'MA':
-                    summary = ta.get_analysis().moving_averages
-                    summ = summary['RECOMMENDATION']
-                
-                elif momemtum == 'OSCI':
-                    summary = ta.get_analysis().oscillators
-                    summ = summary['RECOMMENDATION']
+                if momemtum == 'SUM':summ = ta.get_analysis().summary['RECOMMENDATION']
+                elif momemtum == 'OSCI':summ = ta.get_analysis().oscillators['RECOMMENDATION']
+                ### กรณีไม่ได้กำหนดค่า Momemtum ให้ใช้ MA
+                else:summ = ta.get_analysis().moving_averages['RECOMMENDATION']
             except:pass
-            
-            summary['SYMBOL'] = symbol
-            summary['QOUTE'] = "THB"
-            summary['ON_TIME'] = t
             
             x = 0
             txt_color = "red"
@@ -210,5 +198,6 @@ class BitKub:
             "price": last_price[0],
             "percent": last_price[1],
             "avg_score": (score - total_timeframe),
-            "momemtum": momemtum
+            "momemtum": momemtum,
+            "timeframe": t
         }
