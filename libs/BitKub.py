@@ -159,7 +159,6 @@ class BitKub:
             if str(summ) == "STRONG_SELL":
                 x = 1
                 txt_color = "green"
-                trend = True
                 
             print(f"{symbol} {momemtum}: {colored(summ, txt_color)} ON:{t} SCORE: {x}")
             ### ทำคะแนน avg
@@ -174,6 +173,7 @@ class BitKub:
         if score >= len(self.timeframe()) or (score - total_timeframe) >= 0:
             interesting = "Buy"
             txt_color = "green"
+            trend = True
         
         ### ตรวจสอบราคาล่าสุด
         if last_price[0] == 0:
