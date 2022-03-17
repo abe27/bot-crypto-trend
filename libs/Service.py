@@ -37,25 +37,28 @@ class MysqlService:
         
         if myresult != None:
             current_price = float(str(myresult[1]))
+            ## คำนวนหาเปอร์เซนต์ของกำไร
+            profit_percent = ((price-current_price)*100)/current_price
             # last_price = float(str(myresult[2]))
             ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ 4%
+            
             profit_limit = float(os.getenv('PROFIT_PERCENT', 10))
             pog = abs(profit_limit)
             neg = profit_limit * (-1)
-            percent_profit = (pog * current_price) / 100
             profit = price - current_price
             if profit < 0 or price < float(str(myresult[1])):is_trend = 0
 
-            ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ 4%
+            ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ {pog}%
+            ## และตรวจสอบราคาติดลบน้อยกว่า {neg}
             ## ถ้าตรงตามเงื่อนไขให้ทำการปิดออร์เดอร์ในทันที
-            if profit > percent_profit or percent > pog or (
-                    price - float(str(myresult[1]))) < neg:
+            if profit_percent > pog or (price - float(str(myresult[1]))) < neg:
                 is_stats = 0
                 txt = 'CLOSE ORDER'
 
             sql = f"""update tbt_investments set 
                 last_price='{price}',
                 percent_change='{percent}',
+                avg_score={float(profit_percent)},
                 is_activate={is_stats},
                 is_trend={is_trend},
                 last_update=current_timestamp
