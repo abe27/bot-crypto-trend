@@ -135,6 +135,7 @@ class BitKub:
     
     ### function ตรวจสอบ Trend
     def check_trend(self, symbol, momemtum='MA'):
+        trend = False
         score = 0
         ### loop ด้วย timeframe
         for t in self.timeframe():
@@ -158,6 +159,7 @@ class BitKub:
             if str(summ) == "STRONG_SELL":
                 x = 1
                 txt_color = "green"
+                trend = True
                 
             print(f"{symbol} {momemtum}: {colored(summ, txt_color)} ON:{t} SCORE: {x}")
             ### ทำคะแนน avg
@@ -179,12 +181,12 @@ class BitKub:
             txt_color = "magenta"
             
         price = f"{last_price[0]:,}"
-        trend = False
-        profit_limit = float(os.getenv('STRONG_PERCENT', 10))
-        neg = profit_limit * (-1)
-        # ### ตรวจสอบเปอร์เซนต์การเปลี่ยนแปลงต้อง < 0 กำหนดเป็นขาขึ้น
-        if last_price[1] < neg:
-            trend = True
+        # trend = False
+        # # profit_limit = float(os.getenv('STRONG_PERCENT', 10))
+        # # neg = profit_limit * (-1)
+        # # ### ตรวจสอบเปอร์เซนต์การเปลี่ยนแปลงต้อง < 0 กำหนดเป็นขาขึ้น
+        # if last_price[1] < neg:
+        #     trend = True
             
         print(
             f"{symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
