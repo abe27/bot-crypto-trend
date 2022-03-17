@@ -38,7 +38,7 @@ class MysqlService:
         if myresult != None:
             current_price = float(str(myresult[1]))
             ## คำนวนหาเปอร์เซนต์ของกำไร
-            profit_percent = ((price-current_price)*100)/current_price
+            profit_percent = float("{:.2f}".format(float(((price-current_price)*100)/current_price)))
             # last_price = float(str(myresult[2]))
             ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ 4%
             
@@ -60,7 +60,7 @@ class MysqlService:
             sql = f"""update tbt_investments set 
                 last_price='{price}',
                 percent_change='{percent}',
-                avg_score={float(profit_percent)},
+                avg_score={profit_percent},
                 is_activate={is_stats},
                 is_trend={is_trend},
                 last_update=current_timestamp
