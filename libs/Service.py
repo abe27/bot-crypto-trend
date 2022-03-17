@@ -44,6 +44,8 @@ class MysqlService:
             
             profit_limit = float(os.getenv('PROFIT_PERCENT', 10))
             pog = abs(profit_limit)
+            
+            ### ตรวจสอบเปอร์เซนต์ stoploss
             neg = profit_limit * (-1)
             profit = price - current_price
             if profit < 0 or price < float(str(myresult[1])):is_trend = 0
