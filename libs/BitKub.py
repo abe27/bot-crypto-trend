@@ -173,7 +173,7 @@ class BitKub:
         if score >= len(self.timeframe()) or (score - total_timeframe) >= 0:
             interesting = "Buy"
             txt_color = "green"
-            trend = True
+            # trend = True
         
         ### ตรวจสอบราคาล่าสุด
         if last_price[0] == 0:
@@ -182,11 +182,11 @@ class BitKub:
             
         price = f"{last_price[0]:,}"
         # trend = False
-        # # profit_limit = float(os.getenv('STRONG_PERCENT', 10))
-        # # neg = profit_limit * (-1)
+        profit_limit = float(os.getenv('STRONG_PERCENT', 10))
+        neg = profit_limit * (-1)
         # # ### ตรวจสอบเปอร์เซนต์การเปลี่ยนแปลงต้อง < 0 กำหนดเป็นขาขึ้น
-        # if last_price[1] < neg:
-        #     trend = True
+        if last_price[1] < neg:
+            trend = True
             
         print(
             f"{symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
