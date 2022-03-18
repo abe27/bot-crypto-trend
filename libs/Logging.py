@@ -4,7 +4,7 @@ from datetime import datetime
 class Logging:
     def __init__(self, symbol, msg):
         dte = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        symb = str(f'[{symbol}]').ljust(25)
+        symb = str(f'[{symbol}]').ljust(10)
         txt = f'{dte} {symb} {msg}'
         filename = f'bot-{datetime.now().strftime("%Y-%m-%d")}.log'
         
