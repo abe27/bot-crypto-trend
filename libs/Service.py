@@ -70,7 +70,7 @@ class MysqlService:
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
             print(f'{txt} {symbol}:=> {myresult[0]} last: {price}')
-            txt_status = 'OPEN'
+            txt_status = '-'
             if is_stats == 0:
                 txt_status = 'CLOSED'
             
@@ -78,7 +78,7 @@ class MysqlService:
             Logging(
                 symbol=symbol,
                 msg=
-                f'SUBSCIBE {txt} :=> {myresult[0]} PROFIT: {str(txt_percent).ljust(5)} STATUS: {txt_status}'
+                f'SUBSCIBE {txt} :=> {myresult[0]} PROFIT: {str(txt_percent).ljust(10)} STATUS: {txt_status}'
             )
 
         ### บันทึกราคาทุกๆ 30นาที
