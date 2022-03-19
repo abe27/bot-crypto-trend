@@ -156,7 +156,7 @@ class BitKub:
             x = 0
             txt_color = "red"
             ### กรอง recomment ที่เป็น strong sell
-            if str(summ) == "STRONG_SELL":
+            if str(summ) == "STRONG_SELL" or str(summ).find('BUY') == 0:
                 x = 1
                 txt_color = "green"
                 
