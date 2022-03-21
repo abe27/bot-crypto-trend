@@ -45,15 +45,17 @@ class MysqlService:
             profit_limit = float(os.getenv('PROFIT_PERCENT', 10))
             pog = abs(profit_limit)
             
-            ### ตรวจสอบเปอร์เซนต์ stoploss
-            neg = profit_limit * (-1)
+            ### กำหนดราคา stoploss
+            stop_loss = float(os.getenv('STOP_LOSS', 4))
+            neg = stop_loss * (-1)
+            
             profit = price - current_price
             if profit < 0 or price < float(str(myresult[1])):is_trend = 0
 
             ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ {pog}%
             ## และตรวจสอบราคาติดลบน้อยกว่า {neg}
             ## ถ้าตรงตามเงื่อนไขให้ทำการปิดออร์เดอร์ในทันที
-            if profit_percent > pog or (price - float(str(myresult[1]))) < neg:
+            if profit_percent > pog or (price - float(str(myresult[1]))) <= neg:
                 is_stats = 0
                 txt = 'CLOSE ORDER'
 
