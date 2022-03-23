@@ -114,7 +114,7 @@ class BitKub:
             ta = TA_Handler(symbol=f"{symbol}THB",
                             screener="crypto",
                             exchange="Bitkub",
-                            interval=self.INTERVAL_5_MINUTES)
+                            interval=self.INTERVAL_15_MINUTES)
             
             mv_avg = ta.get_analysis().moving_averages['RECOMMENDATION']
             if str(mv_avg).find('BUY') >= 0:
