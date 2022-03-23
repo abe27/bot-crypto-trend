@@ -195,6 +195,7 @@ class BitKub:
             
         return {
             "interesting": trend,
+            "exchange": "Bitkub",
             'trend': interesting,
             "symbol": symbol,
             "price": last_price[0],
