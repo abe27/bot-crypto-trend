@@ -3,7 +3,9 @@ from nanoid import generate
 import mysql.connector
 from libs.Logging import Logging
 from libs.BitKub import BitKub
+from libs.Notification import Notification
 
+notf = Notification()
 bitkub = BitKub()
 key_generate = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
@@ -50,7 +52,10 @@ class MysqlService:
             neg = stop_loss * (-1)
             
             profit = price - current_price
-            if profit < 0 or price < float(str(myresult[1])):is_trend = 0
+            emoji = '😊'
+            if profit < 0 or price < float(str(myresult[1])):
+                is_trend = 0
+                emoji = '😒'
 
             ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ {pog}%
             ## และตรวจสอบราคาติดลบน้อยกว่า {neg}
@@ -58,7 +63,10 @@ class MysqlService:
             if profit_percent > pog or (price - float(str(myresult[1]))) <= neg:
                 is_stats = 0
                 txt = 'CLOSE ORDER'
-
+                last_price = f"{price:,}"
+                msg = f"""\nเหรียญ {symbol}\nถึงจุดที่ต้องทำการปิดออร์เดอร์แล้ว\nราคาปัจจุบัน {last_price}บาท\nกำไรขาดทุน {emoji} {profit}บาท\nคิดเป็นเปอร์เซนต์ที่ {profit_percent}%"""
+                notf.line(msg)
+                
             sql = f"""update tbt_investments set 
                 last_price='{price}',
                 percent_change='{percent}',
@@ -99,16 +107,17 @@ class MysqlService:
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
         uid = str(generate(key_generate, 21))
-        
+        is_new = False
         if myresult is None:
             sql = f"""INSERT INTO tbt_investments(id,momemtum,symbol,price,percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES ('{uid}','{momemtum}','{symbol}', '{price}','{percent}','{price}', '{percent}', 1, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
             Logging(symbol=symbol, msg=f'NEW {momemtum} RECORD :=> {uid}')
             print(f'insert db :=> {symbol}')
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
+            is_new = True
             
         else:
             # ## update ราคาปัจจุบัน
             self.update(symbol=symbol)
             
-        return True
+        return is_new

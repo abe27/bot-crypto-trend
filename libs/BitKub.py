@@ -185,9 +185,12 @@ class BitKub:
         profit_limit = float(os.getenv('STRONG_PERCENT', 10))
         neg = profit_limit * (-1)
         # # ### ตรวจสอบเปอร์เซนต์การเปลี่ยนแปลงต้อง < 0 กำหนดเป็นขาขึ้น
+        txt_msg = "ขาลง 👇"
         if last_price[1] < neg:
             trend = True
-            
+            txt_msg = "ขาลง ☝️"
+        
+        msg = f"""\nเหรียญ {symbol}\nอยู่ในช่วง{txt_msg}\nราคาต่อเหรียญล่าสุด ณ ตอนนี้ {price}บาท\nระดับการเปลี่ยนแปลงที่ {last_price[1]}%\n""" 
         print(
             f"{symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
         )
@@ -202,5 +205,6 @@ class BitKub:
             "percent": last_price[1],
             "avg_score": (score - total_timeframe),
             "momemtum": momemtum,
-            "timeframe": t
+            "timeframe": t,
+            "message": msg
         }

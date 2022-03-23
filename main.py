@@ -6,10 +6,12 @@ load_dotenv()
 from libs.BitKub import BitKub
 from libs.Service import MysqlService
 from libs.Logging import Logging
+from libs.Notification import Notification
 
 # initialize environ
 bitkub = BitKub()
 mydb = MysqlService()
+notf = Notification()
 
 
 def main():
@@ -30,12 +32,16 @@ def main():
             x = bitkub.check_trend(symbol=s, momemtum=m)
             if x['trend'] == 'Buy' and x['interesting'] is True:
                 ### ถ้าเป็นขาขึ้นให้บันทึกข้อมูล
-                mydb.insert(symbol=x['symbol'],
+                is_new = mydb.insert(symbol=x['symbol'],
                             price=x['price'],
                             percent=x['percent'],
                             is_trend=0,
                             avg_score=x['avg_score'],
                             momemtum=x['momemtum'])
+            
+                #### ส่งข้อความผ่านทางไลน์
+                if is_new:
+                    notf.line(x['message'])
         
     server_time = bitkub.timestamps()
     print(
