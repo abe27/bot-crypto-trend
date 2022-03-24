@@ -28,7 +28,7 @@ def main():
     
 def subscribe():
     server_time = bitkub.timestamps()
-    Logging(symbol='SUBSCRIBE', msg=f"RUN AT: {server_time['timestamp']}")
+    Logging(symbol='FOL', msg=f"RUN AT: {server_time['timestamp']}")
     print(
         colored(f"start run datetime on server: {server_time['datetime']}",
                 "red"))
@@ -46,7 +46,7 @@ def subscribe():
         colored(f"end run datetime on server: {server_time['datetime']}",
                 "red"))
     print("******************************")
-    Logging(symbol='SUBSCRIBE', msg=f"END AT: {server_time['timestamp']}")
+    Logging(symbol='FOL', msg=f"END AT: {server_time['timestamp']}")
 
 
 if __name__ == '__main__':
