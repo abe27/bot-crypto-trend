@@ -33,17 +33,18 @@ def main():
             if x['trend'] == 'Buy' and x['interesting'] is True:
                 ### ถ้าเป็นขาขึ้นให้บันทึกข้อมูล
                 is_new = mydb.insert(symbol=x['symbol'],
-                            price=x['price'],
-                            percent=x['percent'],
-                            is_trend=0,
-                            avg_score=x['avg_score'],
-                            momentum=x['momentum'],
-                            exchange='BITKUB')
-            
+                                     quotes=x['quotes'],
+                                     price=x['price'],
+                                     percent=x['percent'],
+                                     is_trend=0,
+                                     avg_score=x['avg_score'],
+                                     momentum=x['momentum'],
+                                     exchange='BITKUB')
+
                 #### ส่งข้อความผ่านทางไลน์
                 if is_new:
                     notf.line(x['message'])
-        
+
     server_time = bitkub.timestamps()
     print(
         colored(f"end run datetime on server: {server_time['datetime']}",

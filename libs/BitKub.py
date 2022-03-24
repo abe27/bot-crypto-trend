@@ -176,6 +176,7 @@ class BitKub:
             "exchange": "Bitkub",
             'trend': interesting,
             "symbol": symbol,
+            "quotes": "THB",
             "price": last_price[0],
             "percent": last_price[1],
             "avg_score": (score - total_timeframe),

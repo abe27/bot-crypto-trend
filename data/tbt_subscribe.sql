@@ -5,6 +5,7 @@ CREATE TABLE `tbt_investments` (
   `exchange` char(50) NOT NULL,
   `momentum` char(25) NOT NULL,
   `symbol` char(10) NOT NULL,
+  `quotes` char(10) NOT NULL,
   `price` double NOT NULL,
   `percent` double NOT NULL,
   `last_price` double DEFAULT 0,

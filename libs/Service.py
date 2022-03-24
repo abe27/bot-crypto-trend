@@ -18,10 +18,10 @@ class MysqlService:
             password=os.getenv('MYSQL_PASSWORD'),
             database=os.getenv('MYSQL_DBNAME'))
 
-    def logs(self, symbol, price, percent, exchange='BITKUB'):
+    def logs(self, symbol, quotes='THB', price=0, percent=0, exchange='BITKUB'):
         if price > 0:
             mycursor = self.MYSQL_DB.cursor(buffered=True)
-            sql = f"INSERT INTO tbt_signals(id, exchange, `date`, symbol, price, percent)VALUES('{str(generate(key_generate, 21))}', '{exchange}',current_timestamp, '{symbol}', {price}, {percent})"
+            sql = f"INSERT INTO tbt_signals(id, exchange, `date`, symbol, quotes, price, percent)VALUES('{str(generate(key_generate, 21))}', '{exchange}',current_timestamp, '{symbol}', '{quotes}', {price}, {percent})"
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
 
@@ -102,6 +102,7 @@ class MysqlService:
 
     def insert(self,
                symbol='None',
+               quotes='THB',
                price=0,
                percent=0,
                is_trend=1,
@@ -115,7 +116,7 @@ class MysqlService:
         uid = str(generate(key_generate, 21))
         is_new = False
         if myresult is None:
-            sql = f"""INSERT INTO tbt_investments(id,exchange,momentum,symbol,price,percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES ('{uid}','{exchange}','{momentum}','{symbol}', '{price}','{percent}','{price}', '{percent}', 1, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
+            sql = f"""INSERT INTO tbt_investments(id,exchange,momentum,symbol,quotes,price,percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES ('{uid}','{exchange}','{momentum}','{symbol}', '{quotes}','{price}','{percent}','{price}', '{percent}', 1, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
             Logging(symbol=symbol, msg=f'NEW {momentum} RECORD :=> {uid}')
             print(f'insert db :=> {symbol}')
             mycursor.execute(sql)

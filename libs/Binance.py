@@ -24,10 +24,11 @@ class Binance:
         return json.dumps(data, separators=(',', ':'), sort_keys=True)
 
     def sign(self, data):
-        signature = hmac.new(self.__SECRET__.encode('utf-8'), data.encode('utf-8'), hashlib.sha256).hexdigest()
+        signature = hmac.new(self.__SECRET__.encode('utf-8'),
+                             data.encode('utf-8'), hashlib.sha256).hexdigest()
         return signature
 
-    def timestamp(self):
+    def timestamps(self):
         url = f"{self.__URL__}/api/v3/time"
         payload = {}
         headers = {'Content-Type': 'application/json'}
@@ -39,40 +40,42 @@ class Binance:
             'timestamp': res,
             'datetime': datetime.fromtimestamp(int(str(res)[:-3]))
         }
-        
+
     def price(self, symbol='BTC'):
-        url = f"{self.__URL__}/api/v3/ticker/24hr?symbol={symbol}USDT"
-        payload={}
-        headers = {
-            'Content-Type': 'application/json'
-        }
+        url = f"{self.__URL__}/api/v3/ticker/24hr?symbol={symbol}BUSD"
+        payload = {}
+        headers = {'Content-Type': 'application/json'}
 
         response = requests.request("GET", url, headers=headers, data=payload)
 
         res = response.json()
-        data = None
         try:
-            data = res
-        except :
-            code = res['code']
-            print(f"error :=> {code}")
-            
-        return data
+            return [float(res['lastPrice']), float(res['priceChangePercent'])]
+        except:
+            pass
         
+        return [0, 0]
+
+        
+
     def symbols(self):
-        timestamp = self.timestamp()
-        sign = self.sign(f"timestamp={timestamp['timestamp']}")
-        url = f"{self.__URL__}/sapi/v1/capital/config/getall?timestamp={timestamp['timestamp']}&signature={sign}"
-        payload={}
-        response = requests.request("GET", url, headers=self.__HEADER__, data=payload)
+        url = f"{self.__URL__}/api/v3/exchangeInfo"
+
+        payload = {}
+        response = requests.request("GET",
+                                    url,
+                                    headers=self.__HEADER__,
+                                    data=payload)
         res = response.json()
         symbols = []
-        for i in res:
-            symbols.append(i['coin'])
-        
+        for i in res['symbols']:
+            # print(str(i['permissions']))
+            if str(i['permissions']).find('SPOT') >= 0 and i['quoteAsset'] == "BUSD":
+                    symbols.append(i['baseAsset'])
+
         symbols.sort()
         return symbols
-    
+
     ### function ตรวจสอบ Trend
     def check_trend(self, symbol, momentum='MA'):
         trend = False
@@ -80,46 +83,53 @@ class Binance:
         ### loop ด้วย timeframe
         for t in TimeFrame().timeframe():
             ### ตรวจสอบ trend จาก web tradingview
-            ta = TA_Handler(symbol=f"{symbol}USDT",
+            ta = TA_Handler(symbol=f"{symbol}BUSD",
                             screener="crypto",
                             exchange="Binance",
                             interval=t)
             summ = '-'
             try:
                 ### เช็คเงื่อนไข
-                if momentum == 'SUM':summ = ta.get_analysis().summary['RECOMMENDATION']
-                elif momentum == 'OSCI':summ = ta.get_analysis().oscillators['RECOMMENDATION']
-                ### กรณีไม่ได้กำหนดค่า momentum ให้ใช้ MA
-                else:summ = ta.get_analysis().moving_averages['RECOMMENDATION']
-            except:pass
-            
+                if momentum == 'SUM':
+                    summ = ta.get_analysis().summary['RECOMMENDATION']
+                elif momentum == 'OSCI':
+                    summ = ta.get_analysis().oscillators['RECOMMENDATION']
+                    ### กรณีไม่ได้กำหนดค่า momentum ให้ใช้ MA
+                else:
+                    summ = ta.get_analysis().moving_averages['RECOMMENDATION']
+            except:
+                pass
+
             x = 0
             txt_color = "red"
             ### กรอง recomment ที่เป็น strong sell
             if str(summ) == "STRONG_SELL" or str(summ).find('BUY') == 0:
                 x = 1
                 txt_color = "green"
-                
-            print(f"{symbol} {momentum}: {colored(summ, txt_color)} ON:{t} SCORE: {x}")
+
+            print(
+                f"{symbol} {momentum}: {colored(summ, txt_color)} ON:{t} SCORE: {x}"
+            )
             ### ทำคะแนน avg
             score += x
-            
-        ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด     
+
+        ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
         last_price = self.price(symbol=symbol)
         interesting = "Sell"
         txt_color = "red"
         total_timeframe = len(TimeFrame().timeframe())
         ### ตรวจสอบคะแนน avg > timeframe.length
-        if score >= len(TimeFrame().timeframe()) or (score - total_timeframe) >= 0:
+        if score >= len(
+                TimeFrame().timeframe()) or (score - total_timeframe) >= 0:
             interesting = "Buy"
             txt_color = "green"
             # trend = True
-        
+
         ### ตรวจสอบราคาล่าสุด
         if last_price[0] == 0:
             interesting = "-"
             txt_color = "magenta"
-            
+
         price = f"{last_price[0]:,}"
         # trend = False
         profit_limit = float(os.getenv('STRONG_PERCENT', 10))
@@ -129,18 +139,20 @@ class Binance:
         if last_price[1] < neg:
             trend = True
             txt_msg = "ขาขึ้น ☝️"
-        
-        msg = f"""ตลาด Bitkub\nเหรียญ {symbol} อยู่ในช่วง{txt_msg}\nราคาล่าสุด {price}บาท\nการเปลี่ยนแปลง {last_price[1]}%""" 
+
+        msg = f"""ตลาด Bitkub\nเหรียญ {symbol} อยู่ในช่วง{txt_msg}\nราคาล่าสุด {price}บาท\nการเปลี่ยนแปลง {last_price[1]}%"""
         print(
             f"{symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
         )
-        Logging(symbol=symbol,msg=f'{momentum} IS {interesting}({last_price[1]})%')
-            
+        Logging(symbol=symbol,
+                msg=f'{momentum} IS {interesting}({last_price[1]})%')
+
         return {
             "interesting": trend,
-            "exchange": "Bitkub",
+            "exchange": "BNB",
             'trend': interesting,
             "symbol": symbol,
+            "quotes": "BUSD",
             "price": last_price[0],
             "percent": last_price[1],
             "avg_score": (score - total_timeframe),
