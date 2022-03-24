@@ -5,14 +5,14 @@ import urllib.parse
 
 class Notification:
     def __init__(self):
-        self.__LINE_TOKEN = os.getenv('LINE_NOTI_TOKEN')
+        self.__LINE_TOKEN__ = os.getenv('LINE_NOTI_TOKEN')
 
     def line(self, msg):
         url = "https://notify-api.line.me/api/notify"
-
-        payload = urllib.parse.urlencode({"message": (msg).encode('utf-8')})
+        txt = f"{msg}\nแจ้งเตือนจากระบบ {os.getenv('APP_NAME')}"
+        payload = urllib.parse.urlencode({"message": (txt).encode('utf-8')})
         headers = {
-            'Authorization': f'Bearer {self.__LINE_TOKEN}',
+            'Authorization': f'Bearer {self.__LINE_TOKEN__}',
             'Content-Type': 'application/x-www-form-urlencoded'
         }
 
