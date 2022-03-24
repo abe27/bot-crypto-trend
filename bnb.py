@@ -16,8 +16,7 @@ def main():
     # ดึงข้อมูลรายการ symbol ใน bitkub
     symbols = bnb.symbols()
     for sym in symbols:
-        bal = bnb.ticker(symbol=sym)
-        print(sym)
+        bal = bnb.price(symbol=sym)
         if bal != None:
             x = bnb.check_trend(symbol=sym)
             print(x)

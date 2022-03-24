@@ -40,7 +40,7 @@ class Binance:
             'datetime': datetime.fromtimestamp(int(str(res)[:-3]))
         }
         
-    def ticker(self, symbol='BTC'):
+    def price(self, symbol='BTC'):
         url = f"{self.__URL__}/api/v3/ticker/24hr?symbol={symbol}USDT"
         payload={}
         headers = {
@@ -108,9 +108,9 @@ class Binance:
         last_price = self.price(symbol=symbol)
         interesting = "Sell"
         txt_color = "red"
-        total_timeframe = len(self.timeframe())
+        total_timeframe = len(TimeFrame().timeframe())
         ### ตรวจสอบคะแนน avg > timeframe.length
-        if score >= len(self.timeframe()) or (score - total_timeframe) >= 0:
+        if score >= len(TimeFrame().timeframe()) or (score - total_timeframe) >= 0:
             interesting = "Buy"
             txt_color = "green"
             # trend = True
