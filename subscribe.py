@@ -39,7 +39,7 @@ def subscribe():
     myresult = mycursor.fetchall()
     for i in myresult:
         print(colored(f"start subscribe loop {i[0]}", "blue"))
-        mydb.update(symbol=i[0], exchange='{i[1]}')
+        mydb.update(symbol=i[0], exchange=i[1])
 
     server_time = bitkub.timestamps()
     print(

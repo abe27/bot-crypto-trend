@@ -18,10 +18,10 @@ class MysqlService:
             password=os.getenv('MYSQL_PASSWORD'),
             database=os.getenv('MYSQL_DBNAME'))
 
-    def logs(self, symbol, price, percent):
+    def logs(self, symbol, price, percent, exchange='BITKUB'):
         if price > 0:
             mycursor = self.MYSQL_DB.cursor(buffered=True)
-            sql = f"INSERT INTO tbt_signals(id, `date`, symbol, price, percent)VALUES('{str(generate(key_generate, 21))}', current_timestamp, '{symbol}', {price}, {percent})"
+            sql = f"INSERT INTO tbt_signals(id, exchange, `date`, symbol, price, percent)VALUES('{str(generate(key_generate, 21))}', '{exchange}',current_timestamp, '{symbol}', {price}, {percent})"
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
 
@@ -93,7 +93,7 @@ class MysqlService:
             )
 
         ### บันทึกราคาทุกๆ 30นาที
-        self.logs(symbol, price, percent)
+        self.logs(symbol, price, percent, exchange)
         return True
 
     def insert(self,
