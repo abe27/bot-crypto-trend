@@ -60,11 +60,11 @@ class MysqlService:
             ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ {pog}%
             ## และตรวจสอบราคาติดลบน้อยกว่า {neg}
             ## ถ้าตรงตามเงื่อนไขให้ทำการปิดออร์เดอร์ในทันที
-            if profit_percent > pog or (price - float(str(myresult[1]))) <= neg:
+            if profit_percent > pog or (price - float(str(myresult[1]))) < neg:
                 is_stats = 0
                 txt = 'CLOSE ORDER'
                 last_price = f"{price:,}"
-                msg = f"""\nเหรียญ {symbol}\nถึงจุดที่ต้องทำการปิดออร์เดอร์แล้ว\nราคาปัจจุบัน {last_price}บาท\nกำไรขาดทุน {emoji} {profit}บาท\nคิดเป็นเปอร์เซนต์ที่ {profit_percent}%"""
+                msg = f"""\nเหรียญ {symbol}\nถึงจุดที่ต้องปิดออร์เดอร์แล้ว\nราคาปัจจุบัน {last_price}บาท\nกำไรขาดทุน {emoji} {profit}บาท\nคิดเป็นเปอร์เซนต์ที่ {profit_percent}%"""
                 notf.line(msg)
                 
             sql = f"""update tbt_investments set 
