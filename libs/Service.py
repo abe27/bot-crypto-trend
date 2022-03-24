@@ -3,10 +3,12 @@ from nanoid import generate
 import mysql.connector
 from libs.Logging import Logging
 from libs.BitKub import BitKub
+from libs.Binance import Binance
 from libs.Notification import Notification
 
 notf = Notification()
 bitkub = BitKub()
+bnb = Binance()
 key_generate = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 
@@ -26,7 +28,7 @@ class MysqlService:
             self.MYSQL_DB.commit()
 
     def update(self, symbol='None', exchange='BITKUB'):
-        bb = [0, 0]
+        bb = bnb.price(symbol=symbol)
         if exchange == 'BITKUB':
             bb = bitkub.price(symbol=symbol)
             
