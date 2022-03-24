@@ -101,7 +101,7 @@ class MysqlService:
             )
 
         ### บันทึกราคาทุกๆ 30นาที
-        self.logs(symbol, price, percent, exchange)
+        self.logs(symbol, exchange, price, percent)
         return True
 
     def insert(self,
