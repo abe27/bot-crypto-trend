@@ -2,7 +2,8 @@
 
 CREATE TABLE `tbt_investments` (
   `id` char(21) NOT NULL,
-  `momemtum` char(25) NOT NULL,
+  `exchange` char(50) NOT NULL,
+  `momentum` char(25) NOT NULL,
   `symbol` char(10) NOT NULL,
   `price` double NOT NULL,
   `percent` double NOT NULL,

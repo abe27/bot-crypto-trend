@@ -2,6 +2,7 @@
 
 CREATE TABLE `tbt_signals` (
   `id` char(21) NOT NULL,
+  `exchange` char(50) NOT NULL,
   `date` date NOT NULL,
   `symbol` char(20) NOT NULL,
   `price` double NOT NULL,

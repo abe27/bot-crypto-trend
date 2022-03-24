@@ -25,32 +25,33 @@ class MysqlService:
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
 
-    def update(self, symbol='None'):
+    def update(self, symbol='None', exchange='BITKUB'):
         bb = bitkub.price(symbol=symbol)
         price = float(bb[0])
         percent = float(bb[1])
         mycursor = self.MYSQL_DB.cursor(buffered=True)
-        sql = f"select id,price,last_price from tbt_investments where symbol='{symbol}' and is_activate=1"
+        sql = f"select id,price,last_price from tbt_investments where symbol='{symbol}' and exchange='{exchange}' and is_activate=1"
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
         txt = 'UPDATE PRICE'
         is_stats = 1
         is_trend = 1
-        
+
         if myresult != None:
             current_price = float(str(myresult[1]))
             ## คำนวนหาเปอร์เซนต์ของกำไร
-            profit_percent = float("{:.2f}".format(float(((price-current_price)*100)/current_price)))
+            profit_percent = float("{:.2f}".format(
+                float(((price - current_price) * 100) / current_price)))
             # last_price = float(str(myresult[2]))
             ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ 4%
-            
+
             profit_limit = float(os.getenv('PROFIT_PERCENT', 10))
             pog = abs(profit_limit)
-            
+
             ### กำหนดราคา stoploss
             stop_loss = float(os.getenv('STOP_LOSS', 4))
             neg = stop_loss * (-1)
-            
+
             profit = price - current_price
             emoji = '😊'
             if profit < 0 or price < float(str(myresult[1])):
@@ -64,9 +65,9 @@ class MysqlService:
                 is_stats = 0
                 txt = 'CLOSE ORDER'
                 last_price = f"{price:,}"
-                msg = f"""\nเหรียญ {symbol}\nถึงจุดที่ต้องปิดออร์เดอร์แล้ว\nราคาปัจจุบัน {last_price}บาท\nกำไรขาดทุน {emoji} {profit}บาท\nคิดเป็นเปอร์เซนต์ที่ {profit_percent}%"""
+                msg = f"""ตลาด {exchange}\nเหรียญ {symbol}\nถึงจุดที่ต้องปิดออร์เดอร์แล้ว\nราคาปัจจุบัน {last_price}บาท\nกำไรขาดทุน {emoji} {profit}บาท\nอัตราเปลี่ยนแปลง {profit_percent}%\n"""
                 notf.line(msg)
-                
+
             sql = f"""update tbt_investments set 
                 last_price='{price}',
                 percent_change='{percent}',
@@ -83,8 +84,8 @@ class MysqlService:
             txt_status = '-'
             if is_stats == 0:
                 txt_status = 'CLOSED'
-            
-            txt_percent = f"{profit_percent}%" 
+
+            txt_percent = f"{profit_percent}%"
             Logging(
                 symbol=symbol,
                 msg=
@@ -101,23 +102,24 @@ class MysqlService:
                percent=0,
                is_trend=1,
                avg_score=0,
-               momemtum='None'):
+               momentum='None',
+               exchange='BITKUB'):
         mycursor = self.MYSQL_DB.cursor(buffered=True)
-        sql = f"select id,price from tbt_investments where symbol='{symbol}' and momemtum='{momemtum}' and is_activate=1"
+        sql = f"select id,price from tbt_investments where symbol='{symbol}' and momentum='{momentum}' and is_activate=1"
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
         uid = str(generate(key_generate, 21))
         is_new = False
         if myresult is None:
-            sql = f"""INSERT INTO tbt_investments(id,momemtum,symbol,price,percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES ('{uid}','{momemtum}','{symbol}', '{price}','{percent}','{price}', '{percent}', 1, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
-            Logging(symbol=symbol, msg=f'NEW {momemtum} RECORD :=> {uid}')
+            sql = f"""INSERT INTO tbt_investments(id,exchange,momentum,symbol,price,percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES ('{uid}','{exchange}','{momentum}','{symbol}', '{price}','{percent}','{price}', '{percent}', 1, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
+            Logging(symbol=symbol, msg=f'NEW {momentum} RECORD :=> {uid}')
             print(f'insert db :=> {symbol}')
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
             is_new = True
-            
+
         else:
             # ## update ราคาปัจจุบัน
             self.update(symbol=symbol)
-            
+
         return is_new

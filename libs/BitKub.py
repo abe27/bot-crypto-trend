@@ -134,7 +134,7 @@ class BitKub:
         }
     
     ### function ตรวจสอบ Trend
-    def check_trend(self, symbol, momemtum='MA'):
+    def check_trend(self, symbol, momentum='MA'):
         trend = False
         score = 0
         ### loop ด้วย timeframe
@@ -147,9 +147,9 @@ class BitKub:
             summ = '-'
             try:
                 ### เช็คเงื่อนไข
-                if momemtum == 'SUM':summ = ta.get_analysis().summary['RECOMMENDATION']
-                elif momemtum == 'OSCI':summ = ta.get_analysis().oscillators['RECOMMENDATION']
-                ### กรณีไม่ได้กำหนดค่า Momemtum ให้ใช้ MA
+                if momentum == 'SUM':summ = ta.get_analysis().summary['RECOMMENDATION']
+                elif momentum == 'OSCI':summ = ta.get_analysis().oscillators['RECOMMENDATION']
+                ### กรณีไม่ได้กำหนดค่า momentum ให้ใช้ MA
                 else:summ = ta.get_analysis().moving_averages['RECOMMENDATION']
             except:pass
             
@@ -160,7 +160,7 @@ class BitKub:
                 x = 1
                 txt_color = "green"
                 
-            print(f"{symbol} {momemtum}: {colored(summ, txt_color)} ON:{t} SCORE: {x}")
+            print(f"{symbol} {momentum}: {colored(summ, txt_color)} ON:{t} SCORE: {x}")
             ### ทำคะแนน avg
             score += x
         
@@ -190,11 +190,11 @@ class BitKub:
             trend = True
             txt_msg = "ขาขึ้น ☝️"
         
-        msg = f"""\nเหรียญ {symbol}\nอยู่ในช่วง{txt_msg}\nราคาต่อเหรียญล่าสุด ณ ตอนนี้ {price}บาท\nระดับการเปลี่ยนแปลงที่ {last_price[1]}%\n""" 
+        msg = f"""ตลาด Bitkub\nเหรียญ {symbol}\nอยู่ในช่วง{txt_msg}\nราคาล่าสุด {price}บาท\nการเปลี่ยนแปลง {last_price[1]}%\n""" 
         print(
             f"{symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
         )
-        Logging(symbol=symbol,msg=f'{momemtum} IS {interesting}({last_price[1]})%')
+        Logging(symbol=symbol,msg=f'{momentum} IS {interesting}({last_price[1]})%')
             
         return {
             "interesting": trend,
@@ -204,7 +204,7 @@ class BitKub:
             "price": last_price[0],
             "percent": last_price[1],
             "avg_score": (score - total_timeframe),
-            "momemtum": momemtum,
+            "momentum": momentum,
             "timeframe": t,
             "message": msg
         }
