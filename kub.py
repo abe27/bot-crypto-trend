@@ -24,10 +24,10 @@ def main():
     symbols = bitkub.symbols()
     for s in symbols:
         print(colored(f"start new order loop {s}", "green"))
-        # momentum = ['SUM', 'MA', 'OSCI']
+        momentums = ['SUM', 'MA', 'OSCI']
         ## ตรวจสอบข้อมูล momentum MA
-        momentum = ['MA']
-        for m in momentum:
+        # momentums = ['MA']
+        for m in momentums:
             ## ตรวจสอบ Trend ด้วย momentum
             x = bitkub.check_trend(symbol=s, momentum=m)
             if x['trend'] == 'Buy' and x['interesting'] is True:
@@ -44,6 +44,9 @@ def main():
                 #### ส่งข้อความผ่านทางไลน์
                 if is_new:
                     notf.line(x['message'])
+                print(f"end check momentum :=> {m}")
+
+        print('***********************************************\n')
 
     server_time = bitkub.timestamps()
     print(

@@ -9,6 +9,7 @@ from tradingview_ta import TA_Handler
 from libs.TimeFrame import TimeFrame
 from libs.Logging import Logging
 
+
 class BitKub:
     def __init__(self):
         # Initial envs.
@@ -76,13 +77,14 @@ class BitKub:
                 float(ticker[f'THB_{symbol}']['last']),
                 float(ticker[f'THB_{symbol}']['percentChange'])
             ]
-        except:pass
+        except:
+            pass
         # except Exception as e:
         #     Logging(symbol='ERROR', msg=f'{symbol} ERR:{e}')
         #     pass
 
         return [0, 0]
-    
+
     def check_subscribe(self, symbol='None'):
         x = False
         try:
@@ -90,24 +92,25 @@ class BitKub:
                             screener="crypto",
                             exchange="Bitkub",
                             interval=self.INTERVAL_15_MINUTES)
-            
+
             mv_avg = ta.get_analysis().moving_averages['RECOMMENDATION']
             if str(mv_avg).find('BUY') >= 0:
                 x = True
-        except:pass
+        except:
+            pass
         # except Exception as e:
         #     Logging(symbol='ERROR', msg=f'{symbol} ERR:{e}')
         #     pass
-        
+
         last_price = self.price(symbol=symbol)
-        
+
         return {
             'close': x,
             "symbol": symbol,
             "price": last_price[0],
             "percent": last_price[1],
         }
-    
+
     ### function ตรวจสอบ Trend
     def check_trend(self, symbol, momentum='MA'):
         trend = False
@@ -122,39 +125,52 @@ class BitKub:
             summ = '-'
             try:
                 ### เช็คเงื่อนไข
-                if momentum == 'SUM':summ = ta.get_analysis().summary['RECOMMENDATION']
-                elif momentum == 'OSCI':summ = ta.get_analysis().oscillators['RECOMMENDATION']
+                ### เช็คเงื่อนไข
+                recommendation = None
+                if momentum == 'SUM':
+                    recommendation = ta.get_analysis().summary
+                elif momentum == 'OSCI':
+                    recommendation = ta.get_analysis().oscillators
+
                 ### กรณีไม่ได้กำหนดค่า momentum ให้ใช้ MA
-                else:summ = ta.get_analysis().moving_averages['RECOMMENDATION']
-            except:pass
-            
+                else:
+                    recommendation = ta.get_analysis().moving_averages
+
+                # print(recommendation)
+                summ = recommendation['RECOMMENDATION']
+            except:
+                pass
+
             x = 0
             txt_color = "red"
             ### กรอง recomment ที่เป็น strong sell
             if str(summ) == "STRONG_SELL" or str(summ).find('BUY') == 0:
                 x = 1
                 txt_color = "green"
-                
-            print(f"{symbol} {momentum}: {colored(summ, txt_color)} ON:{t} SCORE: {x}")
+
+            print(
+                f"{symbol} {momentum}: {colored(summ, txt_color)} ON:{t} SCORE: {x}"
+            )
             ### ทำคะแนน avg
             score += x
-        
-        ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด     
+
+        ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
         last_price = self.price(symbol=symbol)
         interesting = "Sell"
         txt_color = "red"
         total_timeframe = len(TimeFrame().timeframe())
         ### ตรวจสอบคะแนน avg > timeframe.length
-        if score >= len(TimeFrame().timeframe()) or (score - total_timeframe) >= 0:
+        if score >= len(
+                TimeFrame().timeframe()) or (score - total_timeframe) >= 0:
             interesting = "Buy"
             txt_color = "green"
             # trend = True
-        
+
         ### ตรวจสอบราคาล่าสุด
         if last_price[0] == 0:
             interesting = "-"
             txt_color = "magenta"
-            
+
         price = f"{last_price[0]:,}"
         # trend = False
         profit_limit = float(os.getenv('STRONG_PERCENT', 10))
@@ -164,13 +180,14 @@ class BitKub:
         if last_price[1] < neg:
             trend = True
             txt_msg = "ขาขึ้น ☝️"
-        
-        msg = f"""ตลาด Bitkub\nเหรียญ {symbol} อยู่ในช่วง{txt_msg}\nราคาล่าสุด {price}บาท\nการเปลี่ยนแปลง {last_price[1]}%""" 
+
+        msg = f"""ตลาด Bitkub\nเหรียญ {symbol} อยู่ในช่วง{txt_msg}\nราคาล่าสุด {price}บาท\nการเปลี่ยนแปลง({last_price[1]}%)\nMomentum ที่ใช้ {momentum}"""
         print(
             f"{symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
         )
-        Logging(symbol=symbol,msg=f'{momentum} IS {interesting}({last_price[1]})%')
-            
+        Logging(symbol=symbol,
+                msg=f'{momentum} IS {interesting}({last_price[1]})%')
+
         return {
             "interesting": trend,
             "exchange": "Bitkub",

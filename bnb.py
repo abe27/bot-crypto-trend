@@ -12,6 +12,8 @@ from libs.Notification import Notification
 bnb = Binance()
 mydb = MysqlService()
 notf = Notification()
+
+
 def main():
     server_time = bnb.timestamps()
     print(
@@ -23,29 +25,36 @@ def main():
     for sym in symbols:
         bal = bnb.price(symbol=sym)
         if bal != None:
-            x = bnb.check_trend(symbol=sym)
-            if x['trend'] == 'Buy' and x['interesting'] is True:
-                ### ถ้าเป็นขาขึ้นให้บันทึกข้อมูล
-                is_new = mydb.insert(symbol=x['symbol'],
-                                     quotes=x['quotes'],
-                                     price=x['price'],
-                                     percent=x['percent'],
-                                     is_trend=0,
-                                     avg_score=x['avg_score'],
-                                     momentum=x['momentum'],
-                                     exchange='BNB')
-            
-                #### ส่งข้อความผ่านทางไลน์
-                if is_new:
-                    notf.line(x['message'])
-        
+            momentums = ['SUM', 'OSCI', 'MA']
+            for m in momentums:
+                print(f"start check momentum :=> {m}")
+                x = bnb.check_trend(symbol=sym, momentum=m)
+                if x['trend'] == 'Buy' and x['interesting'] is True:
+                    ### ถ้าเป็นขาขึ้นให้บันทึกข้อมูล
+                    is_new = mydb.insert(symbol=x['symbol'],
+                                         quotes=x['quotes'],
+                                         price=x['price'],
+                                         percent=x['percent'],
+                                         is_trend=0,
+                                         avg_score=x['avg_score'],
+                                         momentum=x['momentum'],
+                                         exchange='BNB')
+
+                    #### ส่งข้อความผ่านทางไลน์
+                    if is_new:
+                        notf.line(x['message'])
+
+                print(f"end check momentum :=> {m}")
+        print('***********************************************\n')
+
     server_time = bnb.timestamps()
     print(
         colored(f"end run datetime on server: {server_time['datetime']}",
                 "red"))
     print("******************************")
     Logging(symbol='BNB', msg=f"END AT: {server_time['timestamp']}")
-    
+
+
 if __name__ == '__main__':
     main()
     sys.exit(0)

@@ -53,10 +53,8 @@ class Binance:
             return [float(res['lastPrice']), float(res['priceChangePercent'])]
         except:
             pass
-        
-        return [0, 0]
 
-        
+        return [0, 0]
 
     def symbols(self):
         url = f"{self.__URL__}/api/v3/exchangeInfo"
@@ -70,8 +68,9 @@ class Binance:
         symbols = []
         for i in res['symbols']:
             # print(str(i['permissions']))
-            if str(i['permissions']).find('SPOT') >= 0 and i['quoteAsset'] == "BUSD":
-                    symbols.append(i['baseAsset'])
+            if str(i['permissions']).find(
+                    'SPOT') >= 0 and i['quoteAsset'] == "BUSD":
+                symbols.append(i['baseAsset'])
 
         symbols.sort()
         return symbols
@@ -90,13 +89,18 @@ class Binance:
             summ = '-'
             try:
                 ### เช็คเงื่อนไข
+                recommendation = None
                 if momentum == 'SUM':
-                    summ = ta.get_analysis().summary['RECOMMENDATION']
+                    recommendation = ta.get_analysis().summary
                 elif momentum == 'OSCI':
-                    summ = ta.get_analysis().oscillators['RECOMMENDATION']
-                    ### กรณีไม่ได้กำหนดค่า momentum ให้ใช้ MA
+                    recommendation = ta.get_analysis().oscillators
+
+                ### กรณีไม่ได้กำหนดค่า momentum ให้ใช้ MA
                 else:
-                    summ = ta.get_analysis().moving_averages['RECOMMENDATION']
+                    recommendation = ta.get_analysis().moving_averages
+
+                # print(recommendation)
+                summ = recommendation['RECOMMENDATION']
             except:
                 pass
 
@@ -140,7 +144,7 @@ class Binance:
             trend = True
             txt_msg = "ขาขึ้น ☝️"
 
-        msg = f"""ตลาด Binance\nเหรียญ {symbol} อยู่ในช่วง{txt_msg}\nราคาล่าสุด {price}ดอลล่า\nการเปลี่ยนแปลง {last_price[1]}%"""
+        msg = f"""ตลาด Binance\nเหรียญ {symbol} อยู่ในช่วง{txt_msg}\nราคาล่าสุด {price}ดอลล่า\nการเปลี่ยนแปลง({last_price[1]}%)\nMomentum ที่ใช้ {momentum}"""
         print(
             f"{symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
         )

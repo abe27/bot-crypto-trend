@@ -18,14 +18,15 @@ def main():
     print(
         colored(f"start run datetime on server: {server_time['datetime']}",
                 "red"))
-    
+
     server_time = bitkub.timestamps()
     print(
         colored(f"end run datetime on server: {server_time['datetime']}",
                 "red"))
     print("******************************")
     # Logging(symbol='ORDER', msg=f"END AT: {server_time['timestamp']}")
-    
+
+
 def subscribe():
     server_time = bitkub.timestamps()
     Logging(symbol='FOL', msg=f"RUN AT: {server_time['timestamp']}")
