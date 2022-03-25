@@ -144,7 +144,7 @@ class Binance:
             trend = True
             txt_msg = "ขาขึ้น ☝️"
 
-        msg = f"""ตลาด BNB\nเหรียญ {symbol} อยู่ในช่วง{txt_msg}\nราคาล่าสุด {price}ดอลล่า\nการเปลี่ยนแปลง({last_price[1]}%)\nMomentum ที่ใช้ {momentum}"""
+        msg = f"""ตลาด BNB\nเหรียญ {symbol} อยู่ในช่วง{txt_msg}\nราคาล่าสุด {price} ดอลล่า\nการเปลี่ยนแปลง({last_price[1]}%)\nMomentum ที่ใช้ {momentum}"""
         print(
             f"{symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
         )
