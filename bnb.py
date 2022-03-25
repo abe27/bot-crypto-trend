@@ -25,7 +25,7 @@ def main():
     for sym in symbols:
         bal = bnb.price(symbol=sym)
         if bal != None:
-            momentums = ['SUM', 'OSCI', 'MA']
+            momentums = ['MA']
             for m in momentums:
                 print(f"start check momentum :=> {m}")
                 x = bnb.check_trend(symbol=sym, momentum=m)

@@ -24,7 +24,7 @@ def main():
     symbols = bitkub.symbols()
     for s in symbols:
         print(colored(f"start new order loop {s}", "green"))
-        momentums = ['SUM', 'MA', 'OSCI']
+        momentums = ['MA']
         ## ตรวจสอบข้อมูล momentum MA
         # momentums = ['MA']
         for m in momentums:
