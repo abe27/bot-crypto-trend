@@ -137,10 +137,11 @@ class Binance:
         price = f"{last_price[0]:,}"
         # trend = False
         profit_limit = float(os.getenv('STRONG_BNB_PERCENT', 10))
-        neg = profit_limit * (-1)
+        # neg = profit_limit * (-1)
+        positive_limit = abs(profit_limit)
         # # ### ตรวจสอบเปอร์เซนต์การเปลี่ยนแปลงต้อง < 0 กำหนดเป็นขาขึ้น
         txt_msg = "ขาลง 👇"
-        if last_price[1] < neg:
+        if interesting == "Buy" and last_price[1] < positive_limit:
             trend = True
             txt_msg = "ขาขึ้น ☝️"
 
