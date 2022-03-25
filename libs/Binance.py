@@ -50,11 +50,11 @@ class Binance:
 
         res = response.json()
         try:
-            return [float(res['lastPrice']), float(res['priceChangePercent'])]
+            return [float(res['lastPrice']), float(res['priceChangePercent']), float(res['volume']), float(res['quoteVolume'])]
         except:
             pass
 
-        return [0, 0]
+        return [0, 0, 0]
 
     def symbols(self):
         url = f"{self.__URL__}/api/v3/exchangeInfo"
@@ -70,7 +70,9 @@ class Binance:
             # print(str(i['permissions']))
             if str(i['permissions']).find(
                     'SPOT') >= 0 and i['quoteAsset'] == "BUSD":
-                symbols.append(i['baseAsset'])
+                bal = self.price(symbol=i['baseAsset'])
+                if bal[2] > 10000 and bal[2] > 100000:
+                    symbols.append(i['baseAsset'])
 
         symbols.sort()
         return symbols
