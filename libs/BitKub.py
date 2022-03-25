@@ -173,7 +173,7 @@ class BitKub:
 
         price = f"{last_price[0]:,}"
         # trend = False
-        profit_limit = float(os.getenv('STRONG_PERCENT', 10))
+        profit_limit = float(os.getenv('STRONG_BITKUB_PERCENT', 10))
         neg = profit_limit * (-1)
         # # ### ตรวจสอบเปอร์เซนต์การเปลี่ยนแปลงต้อง < 0 กำหนดเป็นขาขึ้น
         txt_msg = "ขาลง 👇"
