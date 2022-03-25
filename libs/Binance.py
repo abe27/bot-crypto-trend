@@ -71,7 +71,7 @@ class Binance:
             if str(i['permissions']).find(
                     'SPOT') >= 0 and i['quoteAsset'] == "BUSD":
                 bal = self.price(symbol=i['baseAsset'])
-                if bal[2] < bal[3]:
+                if bal[2] > 100000 and bal[3] > 1000000:
                     symbols.append(i['baseAsset'])
 
         symbols.sort()
