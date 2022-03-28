@@ -65,7 +65,7 @@ class BitKub:
             for i in data:
                 doc.append(str(i['symbol'])[4:])
 
-        doc.sort()
+        # doc.sort()
         return doc
 
     def price(self, symbol='BTC'):
@@ -144,7 +144,7 @@ class BitKub:
             x = 0
             txt_color = "red"
             ### กรอง recomment ที่เป็น strong sell
-            if str(summ) == "STRONG_SELL" or str(summ).find('BUY') == 0:
+            if str(summ) == "STRONG_SELL" or str(summ).find('BUY') >= 0:
                 x = 1
                 txt_color = "green"
 
@@ -182,8 +182,8 @@ class BitKub:
                 trend = True
                 txt_msg = "ขาขึ้น ☝️"
                 
-        elif str(summ) == "BUY" or str(summ) == "STRONG_BUY":
-            if interesting == "Buy" and last_price[1] < 2:
+        elif str(summ).find('BUY') >= 0:
+            if interesting == "Buy" and last_price[1] < 2.1:
                 trend = True
                 txt_msg = "ขาขึ้น ☝️"
 

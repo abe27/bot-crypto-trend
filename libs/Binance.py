@@ -75,7 +75,7 @@ class Binance:
                 # if bal[2] > 10000 and bal[3] > 100000:
                 #     symbols.append(i['baseAsset'])
 
-        symbols.sort()
+        # symbols.sort()
         return symbols
 
     ### function ตรวจสอบ Trend
@@ -110,7 +110,7 @@ class Binance:
             x = 0
             txt_color = "red"
             ### กรอง recomment ที่เป็น strong sell
-            if str(summ) == "STRONG_SELL" or str(summ).find('BUY') == 0:
+            if str(summ) == "STRONG_SELL" or str(summ).find('BUY') >= 0:
                 x = 1
                 txt_color = "green"
 
@@ -139,17 +139,19 @@ class Binance:
 
         price = f"{last_price[0]:,}"
         # # ### ตรวจสอบเปอร์เซนต์การเปลี่ยนแปลงต้อง < 0 กำหนดเป็นขาขึ้น
+        price = f"{last_price[0]:,}"
+        # # ### ตรวจสอบเปอร์เซนต์การเปลี่ยนแปลงต้อง < 0 กำหนดเป็นขาขึ้น
         txt_msg = "ขาลง 👇"
         if str(summ) == "STRONG_SELL":
             # trend = False
-            profit_limit = float(os.getenv('STRONG_BNB_PERCENT', 10))
+            profit_limit = float(os.getenv('STRONG_BITKUB_PERCENT', 10))
             positive_limit = profit_limit * (-1)
             if interesting == "Buy" and last_price[1] < positive_limit:
                 trend = True
                 txt_msg = "ขาขึ้น ☝️"
                 
-        elif str(summ) == "BUY" or str(summ) == "STRONG_BUY":
-            if interesting == "Buy" and last_price[1] < 2:
+        elif str(summ).find('BUY') >= 0:
+            if interesting == "Buy" and last_price[1] < 2.1:
                 trend = True
                 txt_msg = "ขาขึ้น ☝️"
 
