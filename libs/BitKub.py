@@ -176,14 +176,14 @@ class BitKub:
         txt_msg = "ขาลง 👇"
         if str(summ) == "STRONG_SELL":
             # trend = False
-            profit_limit = float(os.getenv('STRONG_BITKUB_PERCENT', 10))
-            positive_limit = profit_limit * (-1)
-            if interesting == "Buy" and last_price[1] < positive_limit:
+            # profit_limit = float(os.getenv('STRONG_BNB_PERCENT', 10))
+            # positive_limit = profit_limit * (-1)
+            if interesting == "Buy" and last_price[1] < -4:
                 trend = True
                 txt_msg = "ขาขึ้น ☝️"
                 
         elif str(summ).find('BUY') >= 0:
-            if interesting == "Buy" and last_price[1] < 2.1:
+            if interesting == "Buy" and last_price[1] < 1:
                 trend = True
                 txt_msg = "ขาขึ้น ☝️"
 
