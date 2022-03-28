@@ -110,7 +110,7 @@ class Binance:
             x = 0
             txt_color = "red"
             ### กรอง recomment ที่เป็น strong sell
-            if str(summ) == "STRONG_SELL" or str(summ).find('BUY') == 0:
+            if str(summ) == "STRONG_SELL" or str(summ).find('BUY') >= 0:
                 x = 1
                 txt_color = "green"
 
@@ -150,7 +150,7 @@ class Binance:
                 trend = True
                 txt_msg = "ขาขึ้น ☝️"
                 
-        elif str(summ).find('BUY') == 0:
+        elif str(summ).find('BUY') >= 0:
             if interesting == "Buy" and last_price[1] < 1:
                 trend = True
                 txt_msg = "ขาขึ้น ☝️"
