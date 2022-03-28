@@ -183,9 +183,10 @@ class BitKub:
                 txt_msg = "ขาขึ้น ☝️"
                 
         elif str(summ).find('BUY') >= 0:
-            if interesting == "Buy" and last_price[1] < 1:
-                trend = True
-                txt_msg = "ขาขึ้น ☝️"
+            if interesting == "Buy":
+                if last_price[1] >= 0 and last_price[1] < 4:
+                    trend = True
+                    txt_msg = "ขาขึ้น ☝️"
 
         msg = f"""ตลาด Bitkub\nเหรียญ {symbol} อยู่ในช่วง{txt_msg}\nราคาล่าสุด {price} บาท\nการเปลี่ยนแปลง({last_price[1]}%)\nMomentum ที่ใช้ {momentum}"""
         print(
