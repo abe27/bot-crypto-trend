@@ -67,12 +67,13 @@ class Binance:
         res = response.json()
         symbols = []
         for i in res['symbols']:
-            # print(str(i['permissions']))
+            print(f"check {str(i['baseAsset'])}")
             if str(i['permissions']).find(
                     'SPOT') >= 0 and i['quoteAsset'] == "BUSD":
-                bal = self.price(symbol=i['baseAsset'])
-                if bal[2] > 10000 and bal[3] > 100000:
-                    symbols.append(i['baseAsset'])
+                symbols.append(i['baseAsset'])
+                # bal = self.price(symbol=i['baseAsset'])
+                # if bal[2] > 10000 and bal[3] > 100000:
+                #     symbols.append(i['baseAsset'])
 
         symbols.sort()
         return symbols
@@ -137,15 +138,20 @@ class Binance:
             txt_color = "magenta"
 
         price = f"{last_price[0]:,}"
-        # trend = False
-        profit_limit = float(os.getenv('STRONG_BNB_PERCENT', 10))
-        # neg = profit_limit * (-1)
-        positive_limit = abs(profit_limit)
         # # ### ตรวจสอบเปอร์เซนต์การเปลี่ยนแปลงต้อง < 0 กำหนดเป็นขาขึ้น
         txt_msg = "ขาลง 👇"
-        if interesting == "Buy" and last_price[1] < positive_limit:
-            trend = True
-            txt_msg = "ขาขึ้น ☝️"
+        if str(summ) == "STRONG_SELL":
+            # trend = False
+            profit_limit = float(os.getenv('STRONG_BNB_PERCENT', 10))
+            positive_limit = profit_limit * (-1)
+            if interesting == "Buy" and last_price[1] < positive_limit:
+                trend = True
+                txt_msg = "ขาขึ้น ☝️"
+                
+        elif str(summ) == "BUY" or str(summ) == "STRONG_BUY":
+            if interesting == "Buy" and last_price[1] < 2:
+                trend = True
+                txt_msg = "ขาขึ้น ☝️"
 
         msg = f"""ตลาด BNB\nเหรียญ {symbol} อยู่ในช่วง{txt_msg}\nราคาล่าสุด {price} ดอลล่า\nการเปลี่ยนแปลง({last_price[1]}%)\nMomentum ที่ใช้ {momentum}"""
         print(
