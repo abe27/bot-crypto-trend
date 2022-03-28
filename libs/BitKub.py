@@ -184,7 +184,7 @@ class BitKub:
                 
         elif str(summ).find('BUY') >= 0:
             if interesting == "Buy":
-                if last_price[1] >= 0 and last_price[1] < 4:
+                if last_price[1] >= 0 and last_price[1] < 1:
                     trend = True
                     txt_msg = "ขาขึ้น ☝️"
 
