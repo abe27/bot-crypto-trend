@@ -7,14 +7,17 @@ from libs.BitKub import BitKub
 from libs.Service import MysqlService
 from libs.Logging import Logging
 from libs.Notification import Notification
+from libs.Trend import Trend
 
 # initialize environ
 bitkub = BitKub()
 mydb = MysqlService()
 notf = Notification()
+td = Trend()
 
 
 def main():
+    exchange = "Bitkub"
     server_time = bitkub.timestamps()
     print(
         colored(f"start run datetime on server: {server_time['datetime']}",
@@ -29,7 +32,7 @@ def main():
         # momentums = ['MA']
         for m in momentums:
             ## ตรวจสอบ Trend ด้วย momentum
-            x = bitkub.check_trend(symbol=s, momentum=m)
+            x = td.check_trend(symbol=s, quotes="THB", momentum=m, exchange=exchange, market="SPOT")
             if x['trend'] == 'Buy' and x['interesting'] is True:
                 ### ถ้าเป็นขาขึ้นให้บันทึกข้อมูล
                 is_new = mydb.insert(symbol=x['symbol'],
@@ -39,7 +42,7 @@ def main():
                                      is_trend=0,
                                      avg_score=x['avg_score'],
                                      momentum=x['momentum'],
-                                     exchange='BITKUB')
+                                     exchange=exchange)
 
                 #### ส่งข้อความผ่านทางไลน์
                 if is_new:
