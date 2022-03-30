@@ -84,7 +84,7 @@ class Trend:
             time_match = t in time_array
             if time_match:
                 txt_time = "BUY"
-                if last_price[1] < 1.5:
+                if last_price[1] >  0 and last_price[1] < 2:
                     txt_time = "STRONG_BUY"
                     
             if str(summ) == "STRONG_SELL" or str(summ).find(txt_time) == 0:
@@ -128,11 +128,11 @@ class Trend:
                     
             elif str(summ).find('BUY') >= 0:
                 if interesting == "Buy":
-                    if last_price[1] >= 0 and last_price[1] < 1:
+                    if last_price[1] >= 0 and last_price[1] < 2:
                         trend = True
                         txt_msg = "ขาขึ้น ☝️"
 
-            msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol}/{quotes}\nอยู่ในช่วง: {txt_msg}\nราคาล่าสุด: {price} {quotes}\nการเปลี่ยนแปลง({last_price[1]}%)\nMomentum:{momentum}"""
+            msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol}/{quotes}\nอยู่ในช่วง: {txt_msg}\nราคาล่าสุด: {price} {quotes}\nการเปลี่ยนแปลง: {last_price[1]}%\nMomentum:{momentum}"""
             print(
                 f"[{colored(exchange, exchange_color)}]:=> {symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)} {quotes} percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
             )

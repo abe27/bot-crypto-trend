@@ -67,7 +67,7 @@ class Binance:
         res = response.json()
         symbols = []
         for i in res['symbols']:
-            print(f"check {str(i['baseAsset'])}")
+            print(f"check {str(i['baseAsset'])} quote: {str(i['quoteAsset'])} market: {str(i['permissions'])}")
             if str(i['permissions']).find(permissions) >= 0 and i['quoteAsset'] == quotes:
                 symbols.append(i['baseAsset'])
                 # bal = self.price(symbol=i['baseAsset'])
