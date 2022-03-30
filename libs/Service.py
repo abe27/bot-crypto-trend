@@ -32,7 +32,7 @@ class MysqlService:
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
 
-    def update(self, symbol='None', exchange='Bitkub'):
+    def update(self, symbol='None', exchange='Bitkub', market="SPOT"):
         currency = "ดอลล่า"
         bb = bnb.price(symbol=symbol)
         if exchange == 'Bitkub':
@@ -79,7 +79,7 @@ class MysqlService:
                 txt = 'CLOSE ORDER'
                 last_price = f"{price:,}"
                 profit_price = f"{profit:,}"
-                msg = f"""ตลาด {exchange}\nเหรียญ {symbol} ปิดออร์เดอร์ได้แล้ว\nราคาปัจจุบัน {last_price}{currency}\nกำไรขาดทุน {emoji} {profit_price}{currency}\nอัตราเปลี่ยนแปลง {profit_percent}%"""
+                msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol} ปิดออร์เดอร์ได้แล้ว\nราคา: {last_price}{currency}\nกำไรขาดทุน: {emoji} {profit_price}{currency}\nเปลี่ยนแปลง: {profit_percent}%"""
 
             sql = f"""update tbt_investments set 
                 last_price='{price}',
