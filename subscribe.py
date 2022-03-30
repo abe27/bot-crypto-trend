@@ -13,19 +13,8 @@ mydb = MysqlService()
 
 
 def main():
-    server_time = bitkub.timestamps()
-    print(
-        colored(f"start run datetime on server: {server_time['datetime']}",
-                "red"))
-
-    server_time = bitkub.timestamps()
-    print(
-        colored(f"end run datetime on server: {server_time['datetime']}",
-                "red"))
-    print("******************************")
-
-
-def subscribe():
+    price = False
+    if len(sys.argv) > 1:price = True
     server_time = bitkub.timestamps()
     print(
         colored(f"start run datetime on server: {server_time['datetime']}",
@@ -37,7 +26,7 @@ def subscribe():
     myresult = mycursor.fetchall()
     for i in myresult:
         print(colored(f"start subscribe loop {i[0]}", "blue"))
-        mydb.update(symbol=i[0], exchange=i[1], quotes=i[2])
+        mydb.update(symbol=i[0], exchange=i[1], quotes=i[2], update_price=price)
 
     server_time = bitkub.timestamps()
     print(
@@ -48,5 +37,4 @@ def subscribe():
 
 if __name__ == '__main__':
     main()
-    subscribe()
     sys.exit(0)

@@ -32,7 +32,7 @@ class MysqlService:
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
 
-    def update(self, symbol='None', exchange='Bitkub', quotes="THB", market="SPOT"):
+    def update(self, symbol='None', exchange='Bitkub', quotes="THB", market="SPOT", update_price=True):
         bb = bnb.price(symbol=symbol, quotes=quotes)
         if exchange == 'Bitkub':
             bb = bitkub.price(symbol=symbol, quotes=quotes)
@@ -75,13 +75,14 @@ class MysqlService:
             last_price = 0
             profit_price = 0
             profit_pt = 0
-            if profit_percent > pog or (price - float(str(myresult[1]))) < neg:
-                is_stats = 0
-                txt = 'CLOSE ORDER'
-                last_price = f"{price:,}"
-                profit_price = "{:.2f}".format(profit)
-                profit_pt = "{:.2f}".format(profit_percent)
-                msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol} ปิดออร์เดอร์\nราคา: {last_price} {quotes}\nรายได้: {emoji} {profit_price} {quotes}\nเปลี่ยนแปลง: {profit_pt}%"""
+            if update_price is False:
+                if profit_percent > pog or (price - float(str(myresult[1]))) < neg:
+                    is_stats = 0
+                    txt = 'CLOSE ORDER'
+                    last_price = f"{price:,}"
+                    profit_price = "{:.2f}".format(profit)
+                    profit_pt = "{:.2f}".format(profit_percent)
+                    msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol} ปิดออร์เดอร์\nราคา: {last_price} {quotes}\nรายได้: {emoji} {profit_price} {quotes}\nเปลี่ยนแปลง: {profit_pt}%"""
 
             sql = f"""update tbt_investments set 
                 last_price='{price}',
