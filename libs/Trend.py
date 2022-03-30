@@ -54,6 +54,8 @@ class Trend:
         trend = False
         score = 0
         obj_trend = []
+        check_lower_profit = 0
+        check_top_profit = 1
         ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
         last_price = self.price(exchange=exchange, symbol=symbol)
         ### loop ด้วย timeframe
@@ -91,7 +93,7 @@ class Trend:
             time_match = t in time_array
             if time_match:
                 txt_time = "BUY"
-                if last_price[1] > 0 and last_price[1] < 2:
+                if last_price[1] > check_lower_profit and last_price[1] < check_top_profit:
                     txt_time = "STRONG_BUY"
 
             if str(summ) == "STRONG_SELL" or str(summ).find(txt_time) == 0:
@@ -135,7 +137,7 @@ class Trend:
 
             elif str(summ).find('BUY') >= 0:
                 if interesting == "Buy":
-                    if last_price[1] >= 0 and last_price[1] < 2:
+                    if last_price[1] > check_lower_profit and last_price[1] < check_top_profit:
                         trend = True
                         txt_msg = "ขาขึ้น ☝️"
 
