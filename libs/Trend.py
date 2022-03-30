@@ -54,7 +54,7 @@ class Trend:
         trend = False
         score = 0
         obj_trend = []
-        check_lower_profit = 0
+        check_lower_profit = -1
         check_top_profit = 1
         ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
         last_price = self.price(exchange=exchange, symbol=symbol)
