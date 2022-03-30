@@ -58,7 +58,6 @@ class Binance:
 
     def symbols(self, permissions="SPOT",quotes="BUSD"):
         url = f"{self.__URL__}/api/v3/exchangeInfo"
-
         payload = {}
         response = requests.request("GET",
                                     url,
@@ -75,4 +74,5 @@ class Binance:
                     symbols.append(i['baseAsset'])
 
         # symbols.sort()
+        print("\n")
         return symbols
