@@ -32,7 +32,12 @@ class MysqlService:
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
 
-    def update(self, key_id=None, symbol='None', exchange='Bitkub', quotes="THB", market="SPOT", update_price=True):
+    def update(self,
+               symbol='None',
+               exchange='Bitkub',
+               quotes="THB",
+               market="SPOT",
+               update_price=True):
         bb = bnb.price(symbol=symbol, quotes=quotes)
         if exchange == 'Bitkub':
             bb = bitkub.price(symbol=symbol, quotes=quotes)
@@ -40,9 +45,7 @@ class MysqlService:
         price = float(bb[0])
         percent = float(bb[1])
         mycursor = self.MYSQL_DB.cursor(buffered=True)
-        sql = f"select id,price,last_price from tbt_investments where id='{key_id}'"
-        if key_id is None:
-            sql = f"select id,price,last_price from tbt_investments where symbol='{symbol}' and exchange='{exchange}' and quotes='{quotes}' and is_activate=1"
+        sql = f"select id,price,last_price from tbt_investments where symbol='{symbol}' and exchange='{exchange}' and quotes='{quotes}' and is_activate=1 order by price"
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
         txt = 'UPDATE PRICE'
@@ -78,7 +81,8 @@ class MysqlService:
             profit_price = 0
             profit_pt = 0
             if update_price is False:
-                if profit_percent > pog or (price - float(str(myresult[1]))) < neg:
+                if profit_percent > pog or (price -
+                                            float(str(myresult[1]))) < neg:
                     is_stats = 0
                     txt = 'CLOSE ORDER'
                     last_price = f"{price:,}"
@@ -93,8 +97,8 @@ class MysqlService:
                 is_activate={is_stats},
                 is_trend={is_trend},
                 last_update=current_timestamp
-                where id='{str(myresult[0])}'"""
-                
+                where symbol='{symbol}' and exchange='{exchange}' and quotes='{quotes}' and is_activate=1"""
+
             last_price = "{:.2f}".format(price)
             profit_pt = "{:.2f}".format(profit_percent)
             # print(sql)
