@@ -156,6 +156,7 @@ class Trend:
         Logging(
             exchange=exchange,
             symbol=symbol,
+            quotes=quotes,
             msg=f'{market} :=> {momentum} IS {interesting}({last_price[1]})%')
         return {
             "market": market,

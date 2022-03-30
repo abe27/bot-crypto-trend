@@ -22,11 +22,11 @@ def main():
     print(
         colored(f"start run datetime on server: {server_time['datetime']}",
                 "red"))
-    Logging(exchange=exchange,symbol='BNB', msg=f"START AT: {server_time['timestamp']}")
     # ดึงข้อมูลรายการ symbol ใน bitkub
     market = "SPOT" ### MARGIN, SPOT
     quotes = "BUSD"
     if len(sys.argv) > 1:quotes = sys.argv[1] ### BUSD,USDT,BNB
+    Logging(exchange=exchange,symbol='BNB', quotes=quotes, msg=f"START AT: {server_time['timestamp']}")
     symbols = bnb.symbols(permissions=market, quotes=quotes)
     for sym in symbols:
         bal = bnb.price(symbol=sym, quotes=quotes)
@@ -58,7 +58,7 @@ def main():
         colored(f"end run datetime on server: {server_time['datetime']}",
                 "red"))
     print("******************************")
-    Logging(exchange=exchange, symbol='BNB', msg=f"END AT: {server_time['timestamp']}")
+    Logging(exchange=exchange, symbol='BNB', quotes=quotes, msg=f"END AT: {server_time['timestamp']}")
 
 
 if __name__ == '__main__':

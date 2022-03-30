@@ -106,6 +106,7 @@ class MysqlService:
             Logging(
                 exchange=exchange,
                 symbol=symbol,
+                quotes=quotes,
                 msg=
                 f'SUBSCIBE {txt} :=> {myresult[0]} PROFIT: {str(txt_percent).ljust(10)} STATUS: {txt_status}'
             )
@@ -134,6 +135,7 @@ class MysqlService:
             sql = f"""INSERT INTO tbt_investments(id,exchange,momentum,symbol,quotes,price,percent,last_price,percent_change,is_activate, is_trend, avg_score,created_on,last_update) VALUES ('{uid}','{exchange}','{momentum}','{symbol}', '{quotes}','{price}','{percent}','{price}', '{percent}', 1, {is_trend}, {avg_score},current_timestamp, current_timestamp)"""
             Logging(exchange=exchange,
                     symbol=symbol,
+                    quotes=quotes,
                     msg=f'NEW {momentum} RECORD :=> {uid}')
             print(f'insert db :=> {symbol}')
             mycursor.execute(sql)

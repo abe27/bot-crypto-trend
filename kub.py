@@ -22,7 +22,7 @@ def main():
     print(
         colored(f"start run datetime on server: {server_time['datetime']}",
                 "red"))
-    Logging(exchange=exchange, symbol='KUB', msg=f"START AT: {server_time['timestamp']}")
+    Logging(exchange=exchange, symbol='KUB', quotes="THB", msg=f"START AT: {server_time['timestamp']}")
     # ดึงข้อมูลรายการ symbol ใน bitkub
     symbols = bitkub.symbols()
     for s in symbols:
@@ -56,7 +56,7 @@ def main():
         colored(f"end run datetime on server: {server_time['datetime']}",
                 "red"))
     print("******************************")
-    Logging(exchange=exchange, symbol='KUB', msg=f"END AT: {server_time['timestamp']}")
+    Logging(exchange=exchange, symbol='KUB', quotes="THB", msg=f"END AT: {server_time['timestamp']}")
 
 
 if __name__ == '__main__':
