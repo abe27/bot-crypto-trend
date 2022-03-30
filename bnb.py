@@ -24,7 +24,7 @@ def main():
                 "red"))
     Logging(symbol='BNB', msg=f"START AT: {server_time['timestamp']}")
     # ดึงข้อมูลรายการ symbol ใน bitkub
-    market = "SPOT"
+    market = "SPOT" ### FEATURE
     quotes = "BUSD"
     symbols = bnb.symbols(permissions=market, quotes=quotes)
     for sym in symbols:

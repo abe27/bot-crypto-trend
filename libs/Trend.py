@@ -43,7 +43,7 @@ class Trend:
         }
         
     ### function ตรวจสอบ Trend
-    def check_trend(self, symbol="KUB", quotes="THB", momentum='MA', exchange="Bitkub", market='SPOT', screener="crypto", exchange_color="green"):
+    def check_trend(self, symbol="KUB", quotes="THB", momentum='MA', exchange="Bitkub", market='SPOT', screener="crypto", exchange_color="green", neg_positive_limit=-4):
         trend = False
         score = 0
         obj_trend = []
@@ -90,49 +90,57 @@ class Trend:
             )
             ### ทำคะแนน avg
             score += x
-
+        
         ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
         last_price = self.price(exchange=exchange,symbol=symbol)
-        interesting = "Sell"
-        txt_color = "red"
-        total_timeframe = len(TimeFrame().timeframe())
-        ### ตรวจสอบคะแนน avg > timeframe.length
-        if score >= len(
-                TimeFrame().timeframe()) or (score - total_timeframe) >= 0:
-            interesting = "Buy"
-            txt_color = "green"
-            # trend = True
+        
+        if market == "SPOT":
+            interesting = "Sell"
+            txt_color = "red"
+            total_timeframe = len(TimeFrame().timeframe())
+            ### ตรวจสอบคะแนน avg > timeframe.length
+            if score >= len(
+                    TimeFrame().timeframe()) or (score - total_timeframe) >= 0:
+                interesting = "Buy"
+                txt_color = "green"
+                # trend = True
 
-        ### ตรวจสอบราคาล่าสุด
-        if last_price[0] == 0:
-            interesting = "-"
-            txt_color = "magenta"
+            ### ตรวจสอบราคาล่าสุด
+            if last_price[0] == 0:
+                interesting = "-"
+                txt_color = "magenta"
 
-        price = f"{last_price[0]:,}"
-        # # ### ตรวจสอบเปอร์เซนต์การเปลี่ยนแปลงต้อง < 0 กำหนดเป็นขาขึ้น
-        txt_msg = "ขาลง 👇"
-        if str(summ) == "STRONG_SELL":
-            # trend = False
-            # profit_limit = float(os.getenv('STRONG_BNB_PERCENT', 10))
-            # positive_limit = profit_limit * (-1)
-            if interesting == "Buy" and last_price[1] < -4:
-                trend = True
-                txt_msg = "ขาขึ้น ☝️"
-                
-        elif str(summ).find('BUY') >= 0:
-            if interesting == "Buy":
-                if last_price[1] >= 0 and last_price[1] < 1:
+            price = f"{last_price[0]:,}"
+            # # ### ตรวจสอบเปอร์เซนต์การเปลี่ยนแปลงต้อง < 0 กำหนดเป็นขาขึ้น
+            txt_msg = "ขาลง 👇"
+            if str(summ) == "STRONG_SELL":
+                # trend = False
+                # profit_limit = float(os.getenv('STRONG_BNB_PERCENT', 10))
+                # positive_limit = profit_limit * (-1)
+                if interesting == "Buy" and last_price[1] <= neg_positive_limit:
                     trend = True
                     txt_msg = "ขาขึ้น ☝️"
+                    
+            elif str(summ).find('BUY') >= 0:
+                if interesting == "Buy":
+                    if last_price[1] >= 0 and last_price[1] < 1:
+                        trend = True
+                        txt_msg = "ขาขึ้น ☝️"
 
-        msg = f"""ตลาด {exchange}\nเหรียญ {symbol} อยู่ในช่วง{txt_msg}\nราคาล่าสุด {price} บาท\nการเปลี่ยนแปลง({last_price[1]}%)\nMomentum ที่ใช้ {momentum}"""
-        print(
-            f"[{colored(exchange, exchange_color)}]:=> {symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
-        )
+            msg = f"""ตลาด {exchange}({market})\nเหรียญ {symbol}/{quotes} อยู่ในช่วง{txt_msg}\nราคาล่าสุด {price} บาท\nการเปลี่ยนแปลง({last_price[1]}%)\nMomentum ที่ใช้ {momentum}"""
+            print(
+                f"[{colored(exchange, exchange_color)}]:=> {symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
+            )
+            
+        else:
+            trend = "-"
+            interesting = False
+            score = 0
+            total_timeframe = 0
+            msg = f"""Not Respone"""
+            
         
-        Logging(symbol=symbol,
-                msg=f'{momentum} IS {interesting}({last_price[1]})%')
-
+        Logging(symbol=symbol,msg=f'{market} :=> {momentum} IS {interesting}({last_price[1]})%')
         return {
             "market": market,
             "interesting": trend,
