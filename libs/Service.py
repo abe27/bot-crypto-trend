@@ -83,7 +83,7 @@ class MysqlService:
                 last_price = f"{price:,}"
                 profit_price = "{:.2f}".format(profit)
                 profit_pt = "{:.2f}".format(profit_percent)
-                msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol} ปิดออร์เดอร์ได้แล้ว\nราคา: {last_price} {quotes}\nกำไรขาดทุน: {emoji} {profit_price} {quotes}\nเปลี่ยนแปลง: {profit_pt}%"""
+                msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol} ปิดออร์เดอร์\nราคา: {last_price} {quotes}\nรายได้: {emoji} {profit_price} {quotes}\nเปลี่ยนแปลง: {profit_pt}%"""
 
             sql = f"""update tbt_investments set 
                 last_price='{price}',
