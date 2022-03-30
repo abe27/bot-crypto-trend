@@ -127,7 +127,7 @@ class MysqlService:
                momentum='None',
                exchange='BITKUB'):
         mycursor = self.MYSQL_DB.cursor(buffered=True)
-        sql = f"select id,price from tbt_investments where symbol='{symbol}' and momentum='{momentum}' and is_activate=1"
+        sql = f"select id,price from tbt_investments where symbol='{symbol}' and quotes='{quotes}' and momentum='{momentum}' and is_activate=1"
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
         uid = str(generate(key_generate, 21))
