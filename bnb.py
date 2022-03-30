@@ -33,7 +33,7 @@ def main():
             momentums = ['MA']
             for m in momentums:
                 print(f"start check momentum :=> {m}")
-                x = td.check_trend(symbol=sym, quotes=quotes, momentum=m, exchange=exchange, market="SPOT", exchange_color="yellow")
+                x = td.check_trend(symbol=sym, quotes=quotes, momentum=m, exchange=exchange, market=market, exchange_color="yellow")
                 if x['trend'] == 'Buy' and x['interesting'] is True:
                     ### ถ้าเป็นขาขึ้นให้บันทึกข้อมูล
                     is_new = mydb.insert(symbol=x['symbol'],
