@@ -47,6 +47,8 @@ class Trend:
         trend = False
         score = 0
         obj_trend = []
+        ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
+        last_price = self.price(exchange=exchange,symbol=symbol)
         ### loop ด้วย timeframe
         for t in TimeFrame().timeframe():
             ### ตรวจสอบ trend จาก web tradingview
@@ -80,7 +82,11 @@ class Trend:
             txt_time = "STRONG_BUY"
             time_array = ["1h","2h","4h","1d","1W","1M"]
             time_match = t in time_array
-            if time_match:txt_time = "BUY"
+            if time_match:
+                txt_time = "BUY"
+                if last_price[1] < 1.5:
+                    txt_time = "STRONG_BUY"
+                    
             if str(summ) == "STRONG_SELL" or str(summ).find(txt_time) == 0:
                 x = 1
                 txt_color = "green"
@@ -90,10 +96,9 @@ class Trend:
             )
             ### ทำคะแนน avg
             score += x
-        
+            
         ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
         last_price = self.price(exchange=exchange,symbol=symbol)
-        
         if market == "SPOT":
             interesting = "Sell"
             txt_color = "red"
@@ -127,9 +132,9 @@ class Trend:
                         trend = True
                         txt_msg = "ขาขึ้น ☝️"
 
-            msg = f"""ตลาด {exchange}({market})\nเหรียญ {symbol}/{quotes} อยู่ในช่วง{txt_msg}\nราคาล่าสุด {price} บาท\nการเปลี่ยนแปลง({last_price[1]}%)\nMomentum ที่ใช้ {momentum}"""
+            msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol}/{quotes}\nอยู่ในช่วง: {txt_msg}\nราคาล่าสุด: {price} {quotes}\nการเปลี่ยนแปลง({last_price[1]}%)\nMomentum:{momentum}"""
             print(
-                f"[{colored(exchange, exchange_color)}]:=> {symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)}THB percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
+                f"[{colored(exchange, exchange_color)}]:=> {symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)} {quotes} percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
             )
             
         else:

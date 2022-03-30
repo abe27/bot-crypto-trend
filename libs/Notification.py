@@ -9,7 +9,7 @@ class Notification:
 
     def line(self, msg):
         url = "https://notify-api.line.me/api/notify"
-        txt = f"{msg}\nแจ้งเตือนจากระบบ {os.getenv('APP_NAME')}"
+        txt = f"{msg}\nจากระบบ: {os.getenv('APP_NAME')}"
         payload = urllib.parse.urlencode({"message": (txt).encode('utf-8')})
         headers = {
             'Authorization': f'Bearer {self.__LINE_TOKEN__}',
