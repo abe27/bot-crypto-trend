@@ -27,10 +27,10 @@ class MysqlService:
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
 
-    def update(self, symbol='None', exchange='BITKUB'):
+    def update(self, symbol='None', exchange='Bitkub'):
         currency = "ดอลล่า"
         bb = bnb.price(symbol=symbol)
-        if exchange == 'BITKUB':
+        if exchange == 'Bitkub':
             bb = bitkub.price(symbol=symbol)
             currency = "บาท"
             
@@ -45,6 +45,7 @@ class MysqlService:
         is_stats = 1
         is_trend = 1
 
+        msg = None
         if myresult != None:
             current_price = float(str(myresult[1]))
             ## คำนวนหาเปอร์เซนต์ของกำไร
@@ -73,8 +74,8 @@ class MysqlService:
                 is_stats = 0
                 txt = 'CLOSE ORDER'
                 last_price = f"{price:,}"
-                msg = f"""ตลาด {exchange}\nเหรียญ {symbol} ถึงจุดที่ต้องปิดออร์เดอร์แล้ว\nราคาปัจจุบัน {last_price}{currency}\nกำไรขาดทุน {emoji} {profit}{currency}\nอัตราเปลี่ยนแปลง {profit_percent}%"""
-                notf.line(msg)
+                profit_price = f"{profit:,}"
+                msg = f"""ตลาด {exchange}\nเหรียญ {symbol} ปิดออร์เดอร์ได้แล้ว\nราคาปัจจุบัน {last_price}{currency}\nกำไรขาดทุน {emoji} {profit_price}{currency}\nอัตราเปลี่ยนแปลง {profit_percent}%"""
 
             sql = f"""update tbt_investments set 
                 last_price='{price}',
@@ -102,6 +103,7 @@ class MysqlService:
 
         ### บันทึกราคาทุกๆ 30นาที
         self.logs(symbol, exchange, price, percent)
+        if msg != None:notf.line(msg)
         return True
 
     def insert(self,
