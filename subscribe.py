@@ -32,12 +32,12 @@ def subscribe():
                 "red"))
     # update subscribe
     mycursor = mydb.MYSQL_DB.cursor()
-    sql = f"select symbol,exchange  from tbt_investments where is_activate=1 group by symbol order by symbol"
+    sql = f"select symbol,exchange,quotes from tbt_investments where is_activate=1 group by symbol order by symbol"
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
     for i in myresult:
         print(colored(f"start subscribe loop {i[0]}", "blue"))
-        mydb.update(symbol=i[0], exchange=i[1])
+        mydb.update(symbol=i[0], exchange=i[1], quotes=i[2])
 
     server_time = bitkub.timestamps()
     print(

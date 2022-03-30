@@ -32,7 +32,7 @@ class MysqlService:
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
 
-    def update(self, symbol='None', exchange='Bitkub', market="SPOT"):
+    def update(self, symbol='None', exchange='Bitkub', quotes="THB", market="SPOT"):
         currency = "ดอลล่า"
         bb = bnb.price(symbol=symbol)
         if exchange == 'Bitkub':
@@ -42,7 +42,7 @@ class MysqlService:
         price = float(bb[0])
         percent = float(bb[1])
         mycursor = self.MYSQL_DB.cursor(buffered=True)
-        sql = f"select id,price,last_price from tbt_investments where symbol='{symbol}' and exchange='{exchange}' and is_activate=1"
+        sql = f"select id,price,last_price from tbt_investments where symbol='{symbol}' and exchange='{exchange}' and quotes='{quotes}' and is_activate=1"
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
         txt = 'UPDATE PRICE'
@@ -144,6 +144,6 @@ class MysqlService:
 
         else:
             # ## update ราคาปัจจุบัน
-            self.update(symbol=symbol)
+            self.update(symbol=symbol, exchange=exchange, quotes=quotes)
 
         return is_new
