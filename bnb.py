@@ -29,7 +29,7 @@ def main():
     if len(sys.argv) > 1:quotes = sys.argv[1] ### BUSD,USDT,BNB
     symbols = bnb.symbols(permissions=market, quotes=quotes)
     for sym in symbols:
-        bal = bnb.price(symbol=sym)
+        bal = bnb.price(symbol=sym, quotes=quotes)
         if bal != None:
             momentums = ['MA']
             for m in momentums:

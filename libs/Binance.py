@@ -41,8 +41,8 @@ class Binance:
             'datetime': datetime.fromtimestamp(int(str(res)[:-3]))
         }
 
-    def price(self, symbol='BTC'):
-        url = f"{self.__URL__}/api/v3/ticker/24hr?symbol={symbol}BUSD"
+    def price(self, symbol='BTC', quotes="BUSD"):
+        url = f"{self.__URL__}/api/v3/ticker/24hr?symbol={symbol}{quotes}"
         payload = {}
         headers = {'Content-Type': 'application/json'}
 
@@ -69,7 +69,7 @@ class Binance:
             print(f"check {str(i['baseAsset'])} quote: {str(i['quoteAsset'])} market: {str(i['permissions'])}")
             if str(i['permissions']).find(permissions) >= 0 and i['quoteAsset'] == quotes:
                 # symbols.append(i['baseAsset'])
-                bal = self.price(symbol=i['baseAsset'])
+                bal = self.price(symbol=i['baseAsset'], quotes=quotes)
                 if bal[2] > 90000:
                     symbols.append(i['baseAsset'])
 

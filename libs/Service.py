@@ -33,11 +33,9 @@ class MysqlService:
             self.MYSQL_DB.commit()
 
     def update(self, symbol='None', exchange='Bitkub', quotes="THB", market="SPOT"):
-        currency = "ดอลล่า"
-        bb = bnb.price(symbol=symbol)
+        bb = bnb.price(symbol=symbol, quotes=quotes)
         if exchange == 'Bitkub':
-            bb = bitkub.price(symbol=symbol)
-            currency = "บาท"
+            bb = bitkub.price(symbol=symbol, quotes=quotes)
 
         price = float(bb[0])
         percent = float(bb[1])

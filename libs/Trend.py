@@ -13,15 +13,15 @@ from libs.Binance import Binance
 
 
 class Trend:
-    def price(self, exchange="Bitkub", symbol="BTC"):
-        if exchange == "Bitkub": return BitKub().price(symbol=symbol)
-        elif exchange == "Binance": return Binance().price(symbol=symbol)
+    def price(self, exchange="Bitkub", symbol="BTC", quotes="THB"):
+        if exchange == "Bitkub": return BitKub().price(symbol=symbol, quotes=quotes)
+        elif exchange == "Binance": return Binance().price(symbol=symbol, quotes=quotes)
         return [0, 0, 0]
 
-    def check_subscribe(self, symbol='None'):
+    def check_subscribe(self, symbol='None', quotes="THB"):
         x = False
         try:
-            ta = TA_Handler(symbol=f"{symbol}THB",
+            ta = TA_Handler(symbol=f"{symbol}{quotes}",
                             screener="crypto",
                             exchange="Bitkub",
                             interval=self.INTERVAL_15_MINUTES)
@@ -32,7 +32,7 @@ class Trend:
         except:
             pass
 
-        last_price = self.price(symbol=symbol)
+        last_price = self.price(symbol=symbol, quotes=quotes)
 
         return {
             'close': x,
@@ -57,7 +57,7 @@ class Trend:
         check_lower_profit = -1
         check_top_profit = 1
         ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
-        last_price = self.price(exchange=exchange, symbol=symbol)
+        last_price = self.price(exchange=exchange, symbol=symbol, quotes=quotes)
         ### loop ด้วย timeframe
         for t in TimeFrame().timeframe():
             ### ตรวจสอบ trend จาก web tradingview
@@ -107,7 +107,7 @@ class Trend:
             score += x
 
         ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
-        last_price = self.price(exchange=exchange, symbol=symbol)
+        last_price = self.price(exchange=exchange, symbol=symbol, quotes=quotes)
         if market == "SPOT":
             interesting = "Sell"
             txt_color = "red"

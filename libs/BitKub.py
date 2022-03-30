@@ -66,15 +66,15 @@ class BitKub:
         # doc.sort()
         return doc
 
-    def price(self, symbol='BTC'):
+    def price(self, symbol='BTC', quotes="THB"):
         ticker = requests.get(self.API_HOST + '/api/market/ticker?sym=' +
-                              f'THB_{symbol}')
+                              f'{quotes}_{symbol}')
         ticker = ticker.json()
         try:
             return [
-                float(ticker[f'THB_{symbol}']['last']),
-                float(ticker[f'THB_{symbol}']['percentChange']),
-                float(ticker[f'THB_{symbol}']['quoteVolume'])
+                float(ticker[f'{quotes}_{symbol}']['last']),
+                float(ticker[f'{quotes}_{symbol}']['percentChange']),
+                float(ticker[f'{quotes}_{symbol}']['quoteVolume'])
             ]
         except:
             pass
