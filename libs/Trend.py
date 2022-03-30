@@ -141,7 +141,7 @@ class Trend:
                         trend = True
                         txt_msg = "ขาขึ้น ☝️"
 
-            msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol}/{quotes}\nอยู่ในช่วง: {txt_msg}\nราคาล่าสุด: {price} {quotes}\nการเปลี่ยนแปลง: {last_price[1]}%\nMomentum:{momentum}"""
+            msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol}/{quotes}\nอยู่ในช่วง: {txt_msg}\nราคาล่าสุด: {price} {quotes}\nการเปลี่ยนแปลง: {last_price[1]}%\nMomentum: {momentum}"""
             print(
                 f"[{colored(exchange, exchange_color)}]:=> {symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)} {quotes} percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
             )
