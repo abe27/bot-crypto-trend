@@ -78,8 +78,5 @@ class BitKub:
             ]
         except:
             pass
-        # except Exception as e:
-        #     Logging(symbol='ERROR', msg=f'{symbol} ERR:{e}')
-        #     pass
 
         return [0, 0, 0]

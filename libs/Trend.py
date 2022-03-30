@@ -10,12 +10,14 @@ from libs.TimeFrame import TimeFrame
 from libs.Logging import Logging
 from libs.BitKub import BitKub
 from libs.Binance import Binance
+
+
 class Trend:
     def price(self, exchange="Bitkub", symbol="BTC"):
-        if exchange == "Bitkub":return BitKub().price(symbol=symbol)
-        elif exchange == "Binance":return Binance().price(symbol=symbol)
+        if exchange == "Bitkub": return BitKub().price(symbol=symbol)
+        elif exchange == "Binance": return Binance().price(symbol=symbol)
         return [0, 0, 0]
-    
+
     def check_subscribe(self, symbol='None'):
         x = False
         try:
@@ -29,9 +31,6 @@ class Trend:
                 x = True
         except:
             pass
-        # except Exception as e:
-        #     Logging(symbol='ERROR', msg=f'{symbol} ERR:{e}')
-        #     pass
 
         last_price = self.price(symbol=symbol)
 
@@ -41,14 +40,22 @@ class Trend:
             "price": last_price[0],
             "percent": last_price[1],
         }
-        
+
     ### function ตรวจสอบ Trend
-    def check_trend(self, symbol="KUB", quotes="THB", momentum='MA', exchange="Bitkub", market='SPOT', screener="crypto", exchange_color="green", neg_positive_limit=-4):
+    def check_trend(self,
+                    symbol="KUB",
+                    quotes="THB",
+                    momentum='MA',
+                    exchange="Bitkub",
+                    market='SPOT',
+                    screener="crypto",
+                    exchange_color="green",
+                    neg_positive_limit=-4):
         trend = False
         score = 0
         obj_trend = []
         ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
-        last_price = self.price(exchange=exchange,symbol=symbol)
+        last_price = self.price(exchange=exchange, symbol=symbol)
         ### loop ด้วย timeframe
         for t in TimeFrame().timeframe():
             ### ตรวจสอบ trend จาก web tradingview
@@ -74,19 +81,19 @@ class Trend:
                 summ = recommendation['RECOMMENDATION']
             except:
                 pass
-            
+
             obj_trend.append(summ)
             x = 0
             txt_color = "red"
             ### กรอง recomment ที่เป็น strong sell
             txt_time = "STRONG_BUY"
-            time_array = ["1h","2h","4h","1d","1W","1M"]
+            time_array = ["1h", "2h", "4h", "1d", "1W", "1M"]
             time_match = t in time_array
             if time_match:
                 txt_time = "BUY"
-                if last_price[1] >  0 and last_price[1] < 2:
+                if last_price[1] > 0 and last_price[1] < 2:
                     txt_time = "STRONG_BUY"
-                    
+
             if str(summ) == "STRONG_SELL" or str(summ).find(txt_time) == 0:
                 x = 1
                 txt_color = "green"
@@ -96,9 +103,9 @@ class Trend:
             )
             ### ทำคะแนน avg
             score += x
-            
+
         ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
-        last_price = self.price(exchange=exchange,symbol=symbol)
+        last_price = self.price(exchange=exchange, symbol=symbol)
         if market == "SPOT":
             interesting = "Sell"
             txt_color = "red"
@@ -125,7 +132,7 @@ class Trend:
                 if interesting == "Buy" and last_price[1] <= neg_positive_limit:
                     trend = True
                     txt_msg = "ขาขึ้น ☝️"
-                    
+
             elif str(summ).find('BUY') >= 0:
                 if interesting == "Buy":
                     if last_price[1] >= 0 and last_price[1] < 2:
@@ -136,16 +143,18 @@ class Trend:
             print(
                 f"[{colored(exchange, exchange_color)}]:=> {symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)} {quotes} percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
             )
-            
+
         else:
             trend = "-"
             interesting = False
             score = 0
             total_timeframe = 0
             msg = f"""Not Respone"""
-            
-        
-        Logging(symbol=symbol,msg=f'{market} :=> {momentum} IS {interesting}({last_price[1]})%')
+
+        Logging(
+            exchange=exchange,
+            symbol=symbol,
+            msg=f'{market} :=> {momentum} IS {interesting}({last_price[1]})%')
         return {
             "market": market,
             "interesting": trend,
