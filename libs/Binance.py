@@ -69,10 +69,10 @@ class Binance:
         for i in res['symbols']:
             print(f"check {str(i['baseAsset'])} quote: {str(i['quoteAsset'])} market: {str(i['permissions'])}")
             if str(i['permissions']).find(permissions) >= 0 and i['quoteAsset'] == quotes:
-                symbols.append(i['baseAsset'])
-                # bal = self.price(symbol=i['baseAsset'])
-                # if bal[2] > 10000 and bal[3] > 100000:
-                #     symbols.append(i['baseAsset'])
+                # symbols.append(i['baseAsset'])
+                bal = self.price(symbol=i['baseAsset'])
+                if bal[2] > 90000:
+                    symbols.append(i['baseAsset'])
 
         # symbols.sort()
         return symbols
