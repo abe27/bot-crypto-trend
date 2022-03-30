@@ -74,12 +74,16 @@ class MysqlService:
             ## ตรวจเปอร์เซ็นต์สูงสุดตามกำหนดในนี้กำหนดที่ {pog}%
             ## และตรวจสอบราคาติดลบน้อยกว่า {neg}
             ## ถ้าตรงตามเงื่อนไขให้ทำการปิดออร์เดอร์ในทันที
+            last_price = 0
+            profit_price = 0
+            profit_pt = 0
             if profit_percent > pog or (price - float(str(myresult[1]))) < neg:
                 is_stats = 0
                 txt = 'CLOSE ORDER'
                 last_price = f"{price:,}"
-                profit_price = f"{profit:,}"
-                msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol} ปิดออร์เดอร์ได้แล้ว\nราคา: {last_price}{currency}\nกำไรขาดทุน: {emoji} {profit_price}{currency}\nเปลี่ยนแปลง: {profit_percent}%"""
+                profit_price = "{:.2f}".format(profit)
+                profit_pt = "{:.2f}".format(profit_percent)
+                msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol} ปิดออร์เดอร์ได้แล้ว\nราคา: {last_price}{currency}\nกำไรขาดทุน: {emoji} {profit_price}{currency}\nเปลี่ยนแปลง: {profit_pt}%"""
 
             sql = f"""update tbt_investments set 
                 last_price='{price}',
@@ -89,16 +93,18 @@ class MysqlService:
                 is_trend={is_trend},
                 last_update=current_timestamp
                 where id='{str(myresult[0])}'"""
-
+                
+            last_price = "{:.2f}".format(price)
+            profit_pt = "{:.2f}".format(profit_percent)
             # print(sql)
             mycursor.execute(sql)
             self.MYSQL_DB.commit()
-            print(f'{txt} {symbol}:=> {myresult[0]} last: {price}')
+            print(f'{txt} {symbol}:=> {myresult[0]} last: {last_price}')
             txt_status = '-'
             if is_stats == 0:
                 txt_status = 'CLOSED'
 
-            txt_percent = f"{profit_percent}%"
+            txt_percent = f"{profit_pt}%"
             Logging(
                 exchange=exchange,
                 symbol=symbol,
