@@ -11,7 +11,7 @@ from tradingview_ta import TA_Handler
 class BitKub:
     def __init__(self):
         # Initial envs.
-        self.API_HOST = os.getenv('BITKUB_HOST')
+        self.API_HOST = os.getenv('BITKUB_HOST', 'https://api.bitkub.com')
         self.API_KEY = os.getenv('BITKUB_KEY')
         self.API_SECRET = os.getenv('BITKUB_SECRET')
         self.API_HEADER = {

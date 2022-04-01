@@ -12,7 +12,7 @@ from libs.Logging import Logging
 
 class Binance:
     def __init__(self):
-        self.__URL__ = os.getenv('BINANCE_HOST')
+        self.__URL__ = os.getenv('BINANCE_HOST', 'https://api.binance.com')
         self.__KEY__ = os.getenv('BINANCE_KEY')
         self.__SECRET__ = os.getenv('BINANCE_SECRET')
         self.__HEADER__ = {
