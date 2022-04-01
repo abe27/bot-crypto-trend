@@ -161,9 +161,9 @@ class Trend:
             total_timeframe = 0
             msg = f"""Not Respone"""
 
-        if str(summ) == "STRONG_SELL" or str(summ) == "BUY":
+        if trend:###str(summ) == "STRONG_SELL" or str(summ) == "BUY":
             #### check confirm_timeframes
-            txt_trend = "BUY"
+            txt_trend = summ
             # if str(summ) == "BUY": txt_trend = "STRONG_SELL"
 
             obj_trend = []
