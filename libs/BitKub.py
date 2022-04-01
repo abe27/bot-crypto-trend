@@ -66,7 +66,7 @@ class BitKub:
             for i in data:
                 ticker = self.ticker(product=str(str(i['symbol'])[4:]))
                 if ticker:
-                    if ticker['baseVolume'] >= 2500:
+                    if ticker['baseVolume'] >= 10000:
                         doc.append(str(i['symbol'])[4:])
 
         # doc.sort()
