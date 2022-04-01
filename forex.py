@@ -1,15 +1,15 @@
 import sys
 from libs.TimeFrame import TimeFrame
-from tradingview_ta import TA_Handler
+from tradingview_ta import TA_Handler, Exchange
 
 
 def main():
     quote_asset = "EURUSD"
     if len(sys.argv) > 1: quote_asset = str(sys.argv[1]).strip()
     time_frame = TimeFrame().INTERVAL_5_MINUTES
-    handler = TA_Handler(symbol="EURUSD",
+    handler = TA_Handler(symbol=quote_asset,
                          screener="forex",
-                         exchange="BINANCE",
+                         exchange=Exchange.FOREX,
                          interval=time_frame)
     analysis = handler.get_analysis()
     print(analysis.indicators["RSI"])
