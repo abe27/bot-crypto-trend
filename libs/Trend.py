@@ -14,8 +14,10 @@ from libs.Binance import Binance
 
 class Trend:
     def price(self, exchange="Bitkub", symbol="BTC", quotes="THB"):
-        if exchange == "Bitkub": return BitKub().price(symbol=symbol, quotes=quotes)
-        elif exchange == "Binance": return Binance().price(symbol=symbol, quotes=quotes)
+        if exchange == "Bitkub":
+            return BitKub().price(symbol=symbol, quotes=quotes)
+        elif exchange == "Binance":
+            return Binance().price(symbol=symbol, quotes=quotes)
         return [0, 0, 0]
 
     def check_subscribe(self, symbol='None', quotes="THB"):
@@ -57,8 +59,11 @@ class Trend:
         check_lower_profit = -1
         check_top_profit = 1
         ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
-        last_price = self.price(exchange=exchange, symbol=symbol, quotes=quotes)
+        last_price = self.price(exchange=exchange,
+                                symbol=symbol,
+                                quotes=quotes)
         ### loop ด้วย timeframe
+        time_array = ["1h", "2h", "4h", "1d", "1W", "1M"]
         for t in TimeFrame().timeframe():
             ### ตรวจสอบ trend จาก web tradingview
             ta = TA_Handler(symbol=f"{symbol}{quotes}",
@@ -89,11 +94,11 @@ class Trend:
             txt_color = "red"
             ### กรอง recomment ที่เป็น strong sell
             txt_time = "STRONG_BUY"
-            time_array = ["1h", "2h", "4h", "1d", "1W", "1M"]
             time_match = t in time_array
             if time_match:
                 txt_time = "BUY"
-                if last_price[1] > check_lower_profit and last_price[1] < check_top_profit:
+                if last_price[1] > check_lower_profit and last_price[
+                        1] < check_top_profit:
                     txt_time = "STRONG_BUY"
 
             if str(summ) == "STRONG_SELL" or str(summ).find(txt_time) == 0:
@@ -107,7 +112,9 @@ class Trend:
             score += x
 
         ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
-        last_price = self.price(exchange=exchange, symbol=symbol, quotes=quotes)
+        last_price = self.price(exchange=exchange,
+                                symbol=symbol,
+                                quotes=quotes)
         if market == "SPOT":
             interesting = "Sell"
             txt_color = "red"
@@ -137,7 +144,8 @@ class Trend:
 
             elif str(summ).find('BUY') >= 0:
                 if interesting == "Buy":
-                    if last_price[1] > check_lower_profit and last_price[1] < check_top_profit:
+                    if last_price[1] > check_lower_profit and last_price[
+                            1] < check_top_profit:
                         trend = True
                         txt_msg = "ขาขึ้น ☝️"
 
@@ -147,17 +155,91 @@ class Trend:
             )
 
         else:
-            trend = "-"
-            interesting = False
+            trend = False
+            interesting = "-"
             score = 0
             total_timeframe = 0
             msg = f"""Not Respone"""
+
+        if str(summ) == "STRONG_SELL" or str(summ) == "BUY":
+            #### check confirm_timeframes
+            txt_trend = "BUY"
+            # if str(summ) == "BUY": txt_trend = "STRONG_SELL"
+
+            obj_trend = []
+            l = TimeFrame().confirm_timeframes()
+            for c in l:
+                ### ตรวจสอบ trend จาก web tradingview
+                ta = TA_Handler(symbol=f"{symbol}{quotes}",
+                                screener=screener,
+                                exchange=exchange,
+                                interval=c)
+                summ = '-'
+                try:
+                    ### เช็คเงื่อนไข
+                    ### เช็คเงื่อนไข
+                    recommendation = None
+                    if momentum == 'SUM':
+                        recommendation = ta.get_analysis().summary
+                    elif momentum == 'OSCI':
+                        recommendation = ta.get_analysis().oscillators
+
+                    ### กรณีไม่ได้กำหนดค่า momentum ให้ใช้ MA
+                    else:
+                        recommendation = ta.get_analysis().moving_averages
+
+                    # print(recommendation)
+                    summ = recommendation['RECOMMENDATION']
+                except:
+                    pass
+
+                if str(c) == '1m':
+                    if str(summ).find(txt_trend): obj_trend.append(summ)
+
+                elif str(c) == '5m':
+                    if str(summ).find(txt_trend): obj_trend.append(summ)
+
+                elif str(c) == '15m':
+                    if str(summ).find(txt_trend): obj_trend.append(summ)
+
+                elif str(c) == '30m':
+                    if str(summ).find(txt_trend): obj_trend.append(summ)
+
+                elif str(c) == '1h':
+                    if str(summ).find(txt_trend): obj_trend.append(summ)
+
+                elif str(c) == '2h':
+                    if txt_trend == "STRONG_SELL": txt_trend = "BUY"
+                    if str(summ).find(txt_trend): obj_trend.append(summ)
+
+                elif str(c) == '4h':
+                    if txt_trend == "STRONG_SELL": txt_trend = "BUY"
+                    if str(summ).find(txt_trend): obj_trend.append(summ)
+
+                # txt_filter = txt_trend
+                # if (c in time_array): txt_filter = "BUY"
+                # if summ == txt_filter: obj_trend.append(summ)
+                print(
+                    f"TIME: {colored(str(c).ljust(15), 'red')}TREND: {colored(str(summ).ljust(15), 'red')}FILTER: {colored(str(txt_trend).ljust(15), 'red')}IS: {colored(str(summ).find(txt_trend) >= 0, 'red')}"
+                )
+
+            trend = False
+            interesting = "Sell"
+            txt_color = "red"
+            if len(obj_trend) > len(TimeFrame().confirm_timeframes()):
+                trend = True
+                interesting = "Buy"
+                txt_color = "green"
+            
+            txt_exchange = f"[{exchange}]"
+            print(f"EXC: {colored(str(txt_exchange).ljust(15), txt_color)}] SYMBOL: {colored(str(symbol).ljust(15), txt_color)} IS: {colored(str(interesting).ljust(15), txt_color)}")
 
         Logging(
             exchange=exchange,
             symbol=symbol,
             quotes=quotes,
             msg=f'{market} :=> {momentum} IS {interesting}({last_price[1]})%')
+
         return {
             "market": market,
             "interesting": trend,

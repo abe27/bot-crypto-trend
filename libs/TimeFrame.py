@@ -18,23 +18,23 @@ class TimeFrame:
             # self.INTERVAL_5_MINUTES,
             # self.INTERVAL_15_MINUTES,
             # self.INTERVAL_30_MINUTES,
-            self.INTERVAL_1_HOUR,
+            # self.INTERVAL_1_HOUR,
             # self.INTERVAL_2_HOURS,
-            # self.INTERVAL_4_HOURS,
+            self.INTERVAL_4_HOURS,
             # self.INTERVAL_1_DAY,
             # self.INTERVAL_1_WEEK,
             # self.INTERVAL_1_MONTH,
         ]
         
-    def comfirm_timeframes(self):
+    def confirm_timeframes(self):
         return [
-            # self.INTERVAL_1_MINUTE,
-            # self.INTERVAL_5_MINUTES,
+            self.INTERVAL_1_MINUTE,### if STRONG_SELL == BUY
+            self.INTERVAL_5_MINUTES,
             self.INTERVAL_15_MINUTES,
             self.INTERVAL_30_MINUTES,
             self.INTERVAL_1_HOUR,
             self.INTERVAL_2_HOURS,
-            self.INTERVAL_4_HOURS,
+            # self.INTERVAL_4_HOURS,
             # self.INTERVAL_1_DAY,
             # self.INTERVAL_1_WEEK,
             # self.INTERVAL_1_MONTH,
