@@ -38,9 +38,9 @@ class MysqlService:
                quotes="THB",
                market="SPOT",
                update_price=True):
-        bb = bnb.price(symbol=symbol, quotes=quotes)
-        if exchange == 'Bitkub':
-            bb = bitkub.price(symbol=symbol, quotes=quotes)
+        bb = [0, 0, 0]
+        if exchange == 'Bitkub':bb = bitkub.price(symbol=symbol, quotes=quotes)
+        elif exchange == 'Binance':bnb.price(symbol=symbol, quotes=quotes)
 
         price = float(bb[0])
         percent = float(bb[1])
