@@ -14,6 +14,7 @@ def main():
     analysis = handler.get_analysis()
     print(analysis.indicators["RSI"])
     print(analysis.indicators["MACD.macd"])
+    print(analysis.summary)
 
 
 if __name__ == '__main__':
