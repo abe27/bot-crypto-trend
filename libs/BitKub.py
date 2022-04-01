@@ -42,11 +42,14 @@ class BitKub:
             'datetime': datetime.fromtimestamp(int(response.text))
         }
 
-    def ticket(self, product='BTC'):
+    def ticker(self, product='BTC'):
         ticker = requests.get(self.API_HOST + '/api/market/ticker?sym=' +
                               f'THB_{product}')
         ticker = ticker.json()
-        return ticker[f'THB__{product}']
+        if len(ticker) > 0:
+            return ticker[f'THB_{product}']
+        
+        return False
 
     def symbols(self):
         url = f"{self.API_HOST}/api/market/symbols"
@@ -61,7 +64,10 @@ class BitKub:
         if obj['error'] == 0:
             data = obj['result']
             for i in data:
-                doc.append(str(i['symbol'])[4:])
+                ticker = self.ticker(product=str(str(i['symbol'])[4:]))
+                if ticker:
+                    if ticker['baseVolume'] >= 2500:
+                        doc.append(str(i['symbol'])[4:])
 
         # doc.sort()
         return doc
