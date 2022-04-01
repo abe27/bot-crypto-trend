@@ -162,7 +162,7 @@ class Trend:
             total_timeframe = 0
             msg = f"""Not Respone"""
 
-        txt_msg = ""
+        txt_msg = f"ขาลง 👇"
         if trend:  ###str(summ) == "STRONG_SELL" or str(summ) == "BUY":
             #### check confirm_timeframes
             txt_trend = summ
@@ -240,8 +240,13 @@ class Trend:
                 f"EXC: {colored(str(txt_exchange).ljust(15), txt_color)}] SYMBOL: {colored(str(symbol).ljust(15), txt_color)} IS: {colored(str(interesting).ljust(15), txt_color)}"
             )
         
+          
         price = f"{last_price[0]:,}" 
         msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol}/{quotes}\nอยู่ในช่วง: {txt_msg}\nราคาล่าสุด: {price} {quotes}\nการเปลี่ยนแปลง: {last_price[1]}%\nMomentum: {momentum}"""
+        if last_price[1] < -4:
+            msg += "\nหมายเหตุ: ** กรุณาตรวจสอบกราฟก่อนซื้อ-ขาย **"
+            trend = True
+            
         print(msg)
         
         Logging(
