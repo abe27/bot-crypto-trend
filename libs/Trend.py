@@ -90,71 +90,7 @@ class Trend:
                     trend = True
             except:
                 pass
-
-        #     obj_trend.append(summ)
-        #     x = 0
-        #     txt_color = "red"
-        #     ### กรอง recomment ที่เป็น strong sell
-        #     txt_time = "STRONG_BUY"
-        #     time_match = t in time_array
-        #     if time_match:
-        #         txt_time = "BUY"
-        #         if last_price[1] > check_lower_profit and last_price[
-        #                 1] < check_top_profit:
-        #             txt_time = "STRONG_BUY"
-
-        #     if str(summ) == "STRONG_SELL" or str(summ).find(txt_time) == 0:
-        #         x = 1
-        #         txt_color = "green"
-
-        #     print(
-        #         f"{symbol} {momentum}: {colored(summ, txt_color)} ON:{t} SCORE: {x}"
-        #     )
-        #     ### ทำคะแนน avg
-        #     score += x
-
-        # ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
-        # last_price = self.price(exchange=exchange,
-        #                         symbol=symbol,
-        #                         quotes=quotes)
-        # if market == "SPOT":
-        #     interesting = "Sell"
-        #     txt_color = "red"
-        #     total_timeframe = len(TimeFrame().timeframe())
-        #     ### ตรวจสอบคะแนน avg > timeframe.length
-        #     if score >= len(TimeFrame().timeframe()) or (score - total_timeframe) >= 0:
-        #         interesting = "Buy"
-        #         txt_color = "green"
-        #         # trend = True
-
-        #     ### ตรวจสอบราคาล่าสุด
-        #     if last_price[0] == 0:
-        #         interesting = "-"
-        #         txt_color = "magenta"
-
-        #     price = f"{last_price[0]:,}"
-        #     # # ### ตรวจสอบเปอร์เซนต์การเปลี่ยนแปลงต้อง < 0 กำหนดเป็นขาขึ้น
-        #     txt_msg = "ขาลง 👇"
-        #     if str(summ) == "STRONG_SELL":
-        #         # trend = False
-        #         # profit_limit = float(os.getenv('STRONG_BNB_PERCENT', 10))
-        #         # positive_limit = profit_limit * (-1)
-        #         if interesting == "Buy" and last_price[1] <= neg_positive_limit:
-        #             trend = True
-        #             txt_msg = "ขาขึ้น ☝️"
-
-        #     elif str(summ).find('BUY') >= 0:
-        #         if interesting == "Buy":
-        #             if last_price[1] > check_lower_profit and last_price[
-        #                     1] < check_top_profit:
-        #                 trend = True
-        #                 txt_msg = "ขาขึ้น ☝️"
-
-        #     msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol}/{quotes}\nอยู่ในช่วง: {txt_msg}\nราคาล่าสุด: {price} {quotes}\nการเปลี่ยนแปลง: {last_price[1]}%\nMomentum: {momentum}"""
-        #     print(
-        #         f"[{colored(exchange, exchange_color)}]:=> {symbol} is {colored(interesting, txt_color)}({score}-{total_timeframe} = {colored(score-total_timeframe, txt_color)}) price: {colored(price, txt_color)} {quotes} percent: {colored(last_price[1], txt_color)} % avg: {colored(score, txt_color)}"
-        #     )
-
+            
         else:
             trend = False
             interesting = "-"
