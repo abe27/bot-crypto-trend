@@ -33,7 +33,7 @@ def main():
         for m in momentums:
             ## ตรวจสอบ Trend ด้วย momentum
             x = td.check_trend(symbol=s, quotes="THB", momentum=m, exchange=exchange, market="SPOT")
-            if x['trend'] == 'Buy' and x['interesting'] is True:
+            if x['interesting'] is True:
                 ### ถ้าเป็นขาขึ้นให้บันทึกข้อมูล
                 is_new = mydb.insert(symbol=x['symbol'],
                                      quotes=x['quotes'],

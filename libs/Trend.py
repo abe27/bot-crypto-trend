@@ -244,7 +244,7 @@ class Trend:
         price = f"{last_price[0]:,}" 
         msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol}/{quotes}\nอยู่ในช่วง: {txt_msg}\nราคาล่าสุด: {price} {quotes}\nการเปลี่ยนแปลง: {last_price[1]}%\nMomentum: {momentum}"""
         if last_price[1] < -4:
-            msg += "\nหมายเหตุ: ** กรุณาตรวจสอบกราฟก่อนซื้อ-ขาย **"
+            msg += "\nหมายเหตุ: ** เช็คกราฟก่อนซื้อ-ขาย **"
             trend = True
             
         print(msg)
