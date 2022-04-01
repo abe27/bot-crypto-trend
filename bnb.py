@@ -23,10 +23,13 @@ def main():
         colored(f"start run datetime on server: {server_time['datetime']}",
                 "red"))
     # ดึงข้อมูลรายการ symbol ใน bitkub
-    market = "SPOT" ### MARGIN, SPOT
+    market = "SPOT"  ### MARGIN, SPOT
     quotes = "BUSD"
-    if len(sys.argv) > 1:quotes = sys.argv[1] ### BUSD,USDT,BNB
-    Logging(exchange=exchange,symbol='BNB', quotes=quotes, msg=f"START AT: {server_time['timestamp']}")
+    if len(sys.argv) > 1: quotes = sys.argv[1]  ### BUSD,USDT,BNB
+    Logging(exchange=exchange,
+            symbol='BNB',
+            quotes=quotes,
+            msg=f"START AT: {server_time['timestamp']}")
     symbols = bnb.symbols(permissions=market, quotes=quotes)
     for sym in symbols:
         bal = bnb.price(symbol=sym, quotes=quotes)
@@ -34,7 +37,12 @@ def main():
             momentums = ['MA']
             for m in momentums:
                 print(f"start check momentum :=> {m}")
-                x = td.check_trend(symbol=sym, quotes=quotes, momentum=m, exchange=exchange, market=market, exchange_color="yellow")
+                x = td.check_trend(symbol=sym,
+                                   quotes=quotes,
+                                   momentum=m,
+                                   exchange=exchange,
+                                   market=market,
+                                   exchange_color="yellow")
                 if x['trend'] == 'Buy' and x['interesting'] is True:
                     ### ถ้าเป็นขาขึ้นให้บันทึกข้อมูล
                     is_new = mydb.insert(symbol=x['symbol'],
@@ -58,7 +66,10 @@ def main():
         colored(f"end run datetime on server: {server_time['datetime']}",
                 "red"))
     print("******************************")
-    Logging(exchange=exchange, symbol='BNB', quotes=quotes, msg=f"END AT: {server_time['timestamp']}")
+    Logging(exchange=exchange,
+            symbol='BNB',
+            quotes=quotes,
+            msg=f"END AT: {server_time['timestamp']}")
 
 
 if __name__ == '__main__':
