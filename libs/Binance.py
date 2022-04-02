@@ -65,13 +65,19 @@ class Binance:
                                     data=payload)
         res = response.json()
         symbols = []
+        x = 0
         for i in res['symbols']:
-            print(f"check {str(i['baseAsset'])} quote: {str(i['quoteAsset'])} market: {str(i['permissions'])}")
+            is_add = False
             if str(i['permissions']).find(permissions) >= 0 and i['quoteAsset'] == quotes:
                 # symbols.append(i['baseAsset'])
                 bal = self.price(symbol=i['baseAsset'], quotes=quotes)
-                if bal[2] > 90000:
+                if bal[2] > 100000 and bal[3] > 10000000:
                     symbols.append(i['baseAsset'])
+                    is_add = True
+                    
+            print(f"{x}. check {colored(str(i['baseAsset']), 'red')} quote: {colored(str(i['quoteAsset']), 'red')} market: {colored(str(i['permissions']), 'red')} {is_add}")
+            
+            x += 1
 
         # symbols.sort()
         print("\n")

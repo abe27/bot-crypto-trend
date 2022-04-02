@@ -60,31 +60,32 @@ class Trend:
         last_price = self.price(exchange=exchange,
                                 symbol=symbol,
                                 quotes=quotes)
-        for t in TimeFrame().timeframe():
-            ### ตรวจสอบ trend จาก web tradingview
-            ta = TA_Handler(symbol=f"{symbol}{quotes}",
-                            screener=screener,
-                            exchange=exchange,
-                            interval=t)
-            summ = '-'
-            try:
-                ### เช็คเงื่อนไข
-                recommendation = None
-                if momentum == 'SUM':
-                    recommendation = ta.get_analysis().summary
-                elif momentum == 'OSCI':
-                    recommendation = ta.get_analysis().oscillators
+        if market == 'SPOT':
+            for t in TimeFrame().timeframe():
+                ### ตรวจสอบ trend จาก web tradingview
+                ta = TA_Handler(symbol=f"{symbol}{quotes}",
+                                screener=screener,
+                                exchange=exchange,
+                                interval=t)
+                summ = '-'
+                try:
+                    ### เช็คเงื่อนไข
+                    recommendation = None
+                    if momentum == 'SUM':
+                        recommendation = ta.get_analysis().summary
+                    elif momentum == 'OSCI':
+                        recommendation = ta.get_analysis().oscillators
 
-                ### กรณีไม่ได้กำหนดค่า momentum ให้ใช้ MA
-                else:
-                    recommendation = ta.get_analysis().moving_averages
+                    ### กรณีไม่ได้กำหนดค่า momentum ให้ใช้ MA
+                    else:
+                        recommendation = ta.get_analysis().moving_averages
 
-                # print(recommendation)
-                summ = recommendation['RECOMMENDATION']
-                if summ == "STRONG_SELL" or str(summ).find("BUY") >= 0:
-                    trend = True
-            except:
-                pass
+                    # print(recommendation)
+                    summ = recommendation['RECOMMENDATION']
+                    if summ == "STRONG_SELL" or str(summ).find("BUY") >= 0:
+                        trend = True
+                except:
+                    pass
 
         else:
             trend = False
