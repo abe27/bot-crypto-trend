@@ -54,7 +54,9 @@ class Trend:
                     exchange_color="green",
                     neg_positive_limit=-4):
         trend = False
+        interesting = "-"
         score = 0
+        total_timeframe = 0
         obj_trend = []
         ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
         last_price = self.price(exchange=exchange,
@@ -88,10 +90,6 @@ class Trend:
                     pass
 
         else:
-            trend = False
-            interesting = "-"
-            score = 0
-            total_timeframe = 0
             msg = f"""Not Respone"""
 
         txt_msg = f"{summ} 🚫⛔"
