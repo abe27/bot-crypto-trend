@@ -56,14 +56,10 @@ class Trend:
         trend = False
         score = 0
         obj_trend = []
-        # check_lower_profit = -1
-        # check_top_profit = 1
         ### ตึงราคาและเปอร์เซนต์การเปลี่ยนแปลงล่าสุด
         last_price = self.price(exchange=exchange,
                                 symbol=symbol,
                                 quotes=quotes)
-        ### loop ด้วย timeframe
-        # time_array = ["1h", "2h", "4h", "1d", "1W", "1M"]
         for t in TimeFrame().timeframe():
             ### ตรวจสอบ trend จาก web tradingview
             ta = TA_Handler(symbol=f"{symbol}{quotes}",
@@ -72,7 +68,6 @@ class Trend:
                             interval=t)
             summ = '-'
             try:
-                ### เช็คเงื่อนไข
                 ### เช็คเงื่อนไข
                 recommendation = None
                 if momentum == 'SUM':
@@ -90,7 +85,7 @@ class Trend:
                     trend = True
             except:
                 pass
-            
+
         else:
             trend = False
             interesting = "-"
@@ -98,7 +93,7 @@ class Trend:
             total_timeframe = 0
             msg = f"""Not Respone"""
 
-        txt_msg = f"ขาลง 👇"
+        txt_msg = f"{summ} 🚫⛔"
         if trend:  ###str(summ) == "STRONG_SELL" or str(summ) == "BUY":
             #### check confirm_timeframes
             txt_trend = summ
@@ -132,27 +127,27 @@ class Trend:
                     pass
 
                 if str(c) == '1m':
-                    if str(summ).find(txt_trend): obj_trend.append(summ)
+                    if str(summ).find(txt_trend) >= 0: obj_trend.append(summ)
 
                 elif str(c) == '5m':
-                    if str(summ).find(txt_trend): obj_trend.append(summ)
+                    if str(summ).find(txt_trend) >= 0: obj_trend.append(summ)
 
                 elif str(c) == '15m':
-                    if str(summ).find(txt_trend): obj_trend.append(summ)
+                    if str(summ).find(txt_trend) >= 0: obj_trend.append(summ)
 
                 elif str(c) == '30m':
-                    if str(summ).find(txt_trend): obj_trend.append(summ)
+                    if str(summ).find(txt_trend) >= 0: obj_trend.append(summ)
 
                 elif str(c) == '1h':
-                    if str(summ).find(txt_trend): obj_trend.append(summ)
+                    if str(summ).find(txt_trend) >= 0: obj_trend.append(summ)
 
                 elif str(c) == '2h':
                     if txt_trend == "STRONG_SELL": txt_trend = "BUY"
-                    if str(summ).find(txt_trend): obj_trend.append(summ)
+                    if str(summ).find(txt_trend) >= 0: obj_trend.append(summ)
 
                 elif str(c) == '4h':
                     if txt_trend == "STRONG_SELL": txt_trend = "BUY"
-                    if str(summ).find(txt_trend): obj_trend.append(summ)
+                    if str(summ).find(txt_trend) >= 0: obj_trend.append(summ)
 
                 # txt_filter = txt_trend
                 # if (c in time_array): txt_filter = "BUY"
@@ -160,7 +155,7 @@ class Trend:
                 print(
                     f"TIME: {colored(str(c).ljust(15), 'red')}TREND: {colored(str(summ).ljust(15), 'red')}FILTER: {colored(str(txt_trend).ljust(15), 'red')}IS: {colored(str(summ).find(txt_trend) >= 0, 'red')}"
                 )
-                
+
             txt_msg = f"ขาลง 👇"
             trend = False
             interesting = "Sell"
@@ -175,16 +170,15 @@ class Trend:
             print(
                 f"EXC: {colored(str(txt_exchange).ljust(15), txt_color)}] SYMBOL: {colored(str(symbol).ljust(15), txt_color)} IS: {colored(str(interesting).ljust(15), txt_color)}"
             )
-        
-          
-        price = f"{last_price[0]:,}" 
+
+        price = f"{last_price[0]:,}"
         msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol}/{quotes}\nอยู่ในช่วง: {txt_msg}\nราคาล่าสุด: {price} {quotes}\nการเปลี่ยนแปลง: {last_price[1]}%\nMomentum: {momentum}"""
         if last_price[1] < -4:
             msg += "\nหมายเหตุ: ** เช็คกราฟก่อนซื้อ-ขาย **"
             trend = True
-            
+
         print(msg)
-        
+
         Logging(
             exchange=exchange,
             symbol=symbol,

@@ -64,10 +64,14 @@ class BitKub:
         if obj['error'] == 0:
             data = obj['result']
             for i in data:
-                ticker = self.ticker(product=str(str(i['symbol'])[4:]))
+                symbol = str(i['symbol'])[4:]
+                stable_coin = ['DAI', 'USDC', 'USDT', 'BUSD', 'UST', 'TUSD', 'DGX']
+                ticker = self.ticker(product=str(symbol))
                 if ticker:
-                    if ticker['baseVolume'] >= 10000:
-                        doc.append(str(i['symbol'])[4:])
+                    # print(f"{symbol} :=> {int(ticker['baseVolume'])} is {(int(ticker['baseVolume']) >= 500000)}")
+                    if int(ticker['baseVolume']) > 100000 and int(ticker['quoteVolume']) > 20000000:
+                        if (symbol in stable_coin) is False:
+                            doc.append(str(symbol))
 
         # doc.sort()
         return doc
