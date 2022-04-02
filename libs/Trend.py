@@ -97,8 +97,6 @@ class Trend:
             #### check confirm_timeframes
             txt_trend = summ
             # if str(summ) == "BUY": txt_trend = "STRONG_SELL"
-
-            obj_trend = []
             l = TimeFrame().confirm_timeframes()
             for c in l:
                 ### ตรวจสอบ trend จาก web tradingview
@@ -141,16 +139,14 @@ class Trend:
                     if str(summ).find(txt_trend) >= 0: obj_trend.append(summ)
 
                 elif str(c) == '2h':
-                    if txt_trend == "STRONG_SELL": txt_trend = "BUY"
+                    if summ == "STRONG_SELL": txt_trend = "BUY"
                     if str(summ).find(txt_trend) >= 0: obj_trend.append(summ)
 
                 elif str(c) == '4h':
-                    if txt_trend == "STRONG_SELL": txt_trend = "BUY"
-                    if str(summ).find(txt_trend) >= 0: obj_trend.append(summ)
+                    if summ == "STRONG_SELL": txt_trend = "BUY"
+                    else: txt_trend.replace("STRONG", "")
+                    if str(summ).find(txt_trend) == 0: obj_trend.append(summ)
 
-                # txt_filter = txt_trend
-                # if (c in time_array): txt_filter = "BUY"
-                # if summ == txt_filter: obj_trend.append(summ)
                 print(
                     f"TIME: {colored(str(c).ljust(15), 'red')}TREND: {colored(str(summ).ljust(15), 'red')}FILTER: {colored(str(txt_trend).ljust(15), 'red')}IS: {colored(str(summ).find(txt_trend) >= 0, 'red')}"
                 )
@@ -159,7 +155,7 @@ class Trend:
             trend = False
             interesting = "Sell"
             txt_color = "red"
-            if len(obj_trend) > len(TimeFrame().confirm_timeframes()):
+            if len(obj_trend) >= len(TimeFrame().confirm_timeframes()):
                 trend = True
                 interesting = "Buy"
                 txt_color = "green"
