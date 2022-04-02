@@ -67,13 +67,15 @@ class Binance:
         symbols = []
         x = 0
         for i in res['symbols']:
-            is_add = False
-            if str(i['permissions']).find(permissions) >= 0 and i['quoteAsset'] == quotes:
-                # symbols.append(i['baseAsset'])
-                bal = self.price(symbol=i['baseAsset'], quotes=quotes)
-                if bal[2] > 100000 and bal[3] > 10000000:
-                    symbols.append(i['baseAsset'])
-                    is_add = True
+            stable_coin = ['DAI', 'USDC', 'USDT', 'BUSD', 'UST', 'TUSD', 'DGX']
+            if (i['baseAsset'] in stable_coin) is False:
+                is_add = False
+                if str(i['permissions']).find(permissions) >= 0 and i['quoteAsset'] == quotes:
+                    # symbols.append(i['baseAsset'])
+                    bal = self.price(symbol=i['baseAsset'], quotes=quotes)
+                    if bal[2] > 100000 and bal[3] > 10000000:
+                        symbols.append(i['baseAsset'])
+                        is_add = True
                     
             print(f"{x}. check {colored(str(i['baseAsset']), 'red')} quote: {colored(str(i['quoteAsset']), 'red')} market: {colored(str(i['permissions']), 'red')} {is_add}")
             
