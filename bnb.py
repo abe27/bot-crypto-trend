@@ -1,4 +1,5 @@
 import sys
+import os
 from termcolor import colored
 from dotenv import load_dotenv
 
@@ -56,7 +57,7 @@ def main():
 
                     #### ส่งข้อความผ่านทางไลน์
                     if is_new:
-                        notf.line(x['message'])
+                        notf.line(msg=x['message'], token=os.getenv('LINE_BNB_TOKEN'))
 
                 print(f"end check momentum :=> {m}")
         print('***********************************************\n')
