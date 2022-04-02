@@ -84,7 +84,7 @@ class Trend:
 
                     # print(recommendation)
                     summ = recommendation['RECOMMENDATION']
-                    if summ == "STRONG_SELL" or str(summ).find("BUY") >= 0:
+                    if summ == "STRONG_SELL" or str(summ).find("BUY") == 0:
                         trend = True
                 except:
                     pass
