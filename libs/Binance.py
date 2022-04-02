@@ -42,14 +42,14 @@ class Binance:
         }
 
     def price(self, symbol='BTC', quotes="BUSD"):
-        url = f"{self.__URL__}/api/v3/ticker/24hr?symbol={symbol}{quotes}"
-        payload = {}
-        headers = {'Content-Type': 'application/json'}
-
-        response = requests.request("GET", url, headers=headers, data=payload)
-
-        res = response.json()
         try:
+            url = f"{self.__URL__}/api/v3/ticker/24hr?symbol={symbol}{quotes}"
+            payload = {}
+            headers = {'Content-Type': 'application/json'}
+
+            response = requests.request("GET", url, headers=headers, data=payload)
+
+            res = response.json()
             return [float(res['lastPrice']), float(res['priceChangePercent']), float(res['volume']), float(res['quoteVolume'])]
         except:
             pass
