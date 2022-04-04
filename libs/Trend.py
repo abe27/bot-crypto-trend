@@ -167,6 +167,21 @@ class Trend:
             )
 
         price = f"{last_price[0]:,}"
+        if str(txt_msg).find("SELL") == 0:
+            txt_msg = f"ขาลง 🔻"
+            
+        elif str(txt_msg).find("BUY") == 0:
+            txt_msg = f"ขาขึ้น 🔺"
+            
+        elif str(txt_msg).find("STRONG_BUY") == 0:
+            txt_msg = f"ขาขึ้นอย่างรุนแรง 🔺🥶"
+            
+        elif str(txt_msg).find("STRONG_SELL") == 0:
+            txt_msg = f"ขาลงอย่างรุ่นแรง 🔻😱"
+        
+        elif str(txt_msg).find("NEUTRAL") == 0:
+            txt_msg = f"ตลาดผันผวนน้อย 😬"
+        
         msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol}/{quotes}\nอยู่ในช่วง: {txt_msg}\nราคาล่าสุด: {price} {quotes}\nการเปลี่ยนแปลง: {last_price[1]}%\nMomentum: {momentum}"""
         if last_price[1] < -4:
             msg += "\nหมายเหตุ: ** เช็คกราฟก่อนซื้อ-ขาย **"
