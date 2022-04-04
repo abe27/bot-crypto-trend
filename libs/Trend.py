@@ -142,10 +142,10 @@ class Trend:
                     if summ == "STRONG_SELL": txt_trend = "BUY"
                     if str(summ).find(txt_trend) >= 0: obj_trend.append(summ)
 
-                elif str(c) == '4h':
-                    if summ == "STRONG_SELL": txt_trend = "BUY"
-                    else: txt_trend.replace("STRONG", "")
-                    if str(summ).find(txt_trend) == 0: obj_trend.append(summ)
+                # elif str(c) == '4h':
+                #     if summ == "STRONG_SELL": txt_trend = "BUY"
+                #     else: txt_trend.replace("STRONG", "")
+                #     if str(summ).find(txt_trend) == 0: obj_trend.append(summ)
 
                 print(
                     f"TIME: {colored(str(c).ljust(15), 'red')}TREND: {colored(str(summ).ljust(15), 'red')}FILTER: {colored(str(txt_trend).ljust(15), 'red')}IS: {colored(str(summ).find(txt_trend) >= 0, 'red')}"
@@ -183,9 +183,11 @@ class Trend:
             txt_msg = f"ตลาดผันผวนน้อย 😬"
         
         msg = f"""ตลาด {exchange}({market})\nเหรียญ: {symbol}/{quotes}\nอยู่ในช่วง: {txt_msg}\nราคาล่าสุด: {price} {quotes}\nการเปลี่ยนแปลง: {last_price[1]}%\nMomentum: {momentum}"""
-        if last_price[1] < -4:
-            msg += "\nหมายเหตุ: ** เช็คกราฟก่อนซื้อ-ขาย **"
-            trend = True
+        if trend is False:
+            if last_price[1] < -5:
+                trend = True
+                
+        msg += "\nหมายเหตุ: ** เช็คกราฟก่อนซื้อ-ขาย **"
 
         print(msg)
 
